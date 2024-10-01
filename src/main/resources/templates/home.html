@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Home</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+
+    <th:block th:replace="../fragments/header :: header"></th:block>
+</head>
+<body>
+<main>
+    <h1>Welcome to the Homepage!</h1>
+    <p>This is the content of your homepage. Explore our features and enjoy your visit!</p>
+</main>
+
+<th:block th:replace="../fragments/footer :: footer"></th:block>
+</body>
+</html>

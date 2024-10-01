@@ -1,0 +1,14 @@
+services:
+  db:
+    image: mysql:8.0
+    container_name: BaiTapBuoi3
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: BaiTapBuoi3
+    ports:
+      - "3305:3306"
+    volumes:
+      - db_data:/var/lib/BaiTapBuoi3
+
+volumes:
+  db_data:

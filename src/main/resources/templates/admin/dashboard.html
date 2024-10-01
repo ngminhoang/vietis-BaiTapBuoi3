@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+<h1>Welcome to Admin Dashboard!</h1>
+<a th:href="@{/logout}">Logout</a>
+
+<script>
+
+    function checkAdminAccess() {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = '/login';
+            return;
+        }
+
+        fetch('/api/public/authen_admin', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to authenticate as admin');
+                }
+                return response.json();
+            })
+            .then(isAdmin => {
+                if (!isAdmin) {
+                    window.location.href = '/login';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Access denied. Admin privileges required.');
+                window.location.href = '/login';
+            });
+    }
+    checkAdminAccess()
+
+</script>
+</body>
+</html>
