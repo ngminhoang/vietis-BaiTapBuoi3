@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIETIS CREDIT WEBSITE</title>
+</head>
+<body>
+<header style="align-items: center; background: #dddddd; padding: 10vh">
+    <h1>VIETIS CREDIT WEBSITE</h1>
+
+    <nav style="display: flex; gap: 10px;">
+        <button onclick="location.href='/'">Home</button>
+        <button onclick="location.href='/admin/dashboard'">Employee</button>
+        <button onclick="location.href='/admin/department'">Department</button>
+        <button onclick="logout()">Logout</button>
+    </nav>
+</header>
+
+
+
+</body>
+</html>
+<script>
+    function logout() {
+        localStorage.removeItem("token");
+        location.href = '/login';
+    }
+</script>

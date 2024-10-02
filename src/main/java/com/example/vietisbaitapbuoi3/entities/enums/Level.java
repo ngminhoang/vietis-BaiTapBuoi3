@@ -1,5 +1,9 @@
 package com.example.vietisbaitapbuoi3.entities.enums;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public enum Level {
     LEVEL_1(1),
     LEVEL_2(2),
@@ -28,5 +32,11 @@ public enum Level {
             }
         }
         throw new IllegalArgumentException("Invalid level value: " + value);
+    }
+
+    public static List<String> AllValue() {
+        return Arrays.stream(Level.values())
+                .map(Level::name)
+                .toList();
     }
 }

@@ -10,4 +10,8 @@ public class AdminController {
     public String adminDashboard() {
         return "admin/dashboard";
     }
+    @GetMapping("/admin/department")
+    public String adminDepartment() {
+        return "admin/department";
+    }
 }

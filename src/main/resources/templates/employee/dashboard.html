@@ -1,15 +1,57 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Employee Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Home</title>
+    <th:block th:replace="../fragments/user_header :: header"></th:block>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        footer {
+            background-color: #dddddd;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
-<h1>Welcome to Employee Dashboard!</h1>
-<a th:href="@{/logout}">Logout</a>
+<main>
+    <h1>Welcome to Employee Dashboard!</h1>
+</main>
 
+<th:block th:replace="../fragments/footer :: footer"></th:block>
 <script>
+
     function checkEmployeeAccess() {
         const token = localStorage.getItem('token');
+
         if (!token) {
             window.location.href = '/login';
             return;
@@ -24,22 +66,31 @@
         })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Failed to authenticate as employee');
+                    throw new Error('Failed to authenticate as admin');
                 }
                 return response.json();
             })
-            .then(isEmployee => {
-                if (!isEmployee) {
+            .then(isAdmin => {
+                if (!isAdmin) {
                     window.location.href = '/login';
                 }
             })
             .catch(error => {
                 console.error('Error:', error);
-                alert('Access denied. Employee privileges required.');
+                alert('Access denied. Admin privileges required.');
                 window.location.href = '/login';
             });
     }
+    function logout() {
+        // Remove the token from localStorage
+        localStorage.removeItem("token");
+
+        // Redirect to the login page
+        location.href = '/login';
+    }
+
     checkEmployeeAccess()
+
 </script>
 </body>
 </html>

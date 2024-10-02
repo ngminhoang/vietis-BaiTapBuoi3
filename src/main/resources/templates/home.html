@@ -43,7 +43,7 @@
 </head>
 <body>
 <main>
-    <h1>Top 7 the hightest credit in VietIS:</h1>
+    <h1>Top 7 the highest credit in VietIS:</h1>
     <table id="data-table">
         <thead>
         <tr>
@@ -62,7 +62,7 @@
 <script>
     async function fetchData() {
         try {
-            const response = await fetch('/api/your-endpoint');
+            const response = await fetch('/api/public/get_all');
             const data = await response.json();
 
             const tableBody = document.querySelector('#data-table tbody');
@@ -73,7 +73,7 @@
                 row.innerHTML = `
                     <td>${item.id}</td>
                     <td>${item.name}</td>
-                    <td>${item.email}</td>
+                    <td>${item.mail}</td>
                 `;
                 tableBody.appendChild(row);
             });
