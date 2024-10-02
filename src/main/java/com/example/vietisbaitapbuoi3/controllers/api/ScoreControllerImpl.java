@@ -20,4 +20,9 @@ public class ScoreControllerImpl implements ScoreController {
     public ResponseEntity<List<Score>> getAllScoreByAccount(@AuthenticationPrincipal Account user) {
         return scoreService.getAllScoreByAccount(user);
     }
+
+    @Override
+    public ResponseEntity<Score> create(Score score) {
+        return scoreService.createScore();
+    }
 }

@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Entity
 @Data
@@ -55,6 +56,9 @@ public class Account implements UserDetails {
     private Role role;
 
     private String password;
+
+    @OneToMany(mappedBy = "score")
+    private List<Score> scores;
 
     @ManyToOne
     @JoinColumn(name = "department_id")
