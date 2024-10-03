@@ -2,6 +2,8 @@ package com.example.vietisbaitapbuoi3.controllers.api;
 
 import com.example.vietisbaitapbuoi3.entities.Account;
 import com.example.vietisbaitapbuoi3.entities.Score;
+import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
+import com.example.vietisbaitapbuoi3.entities.dto.DepartmentScoreCountDTO;
 import com.example.vietisbaitapbuoi3.entities.dto.ScoreRequestDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,4 +25,11 @@ public interface ScoreController {
 
     @PostMapping("/score")
     ResponseEntity<Score> createScore(@RequestBody ScoreRequestDTO score);
+
+    @GetMapping("/score/analyze/department")
+    ResponseEntity<List<DepartmentScoreCountDTO>> getAnalyzeDepartmentScore();
+
+    @GetMapping("/score/analyze/employee")
+    ResponseEntity<List<AccountScoreCountDTO>> getAnalyzeEmployeeScore();
+
 }

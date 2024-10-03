@@ -78,7 +78,7 @@
             .then(data => {
                 localStorage.setItem('token', data.token);
 
-                return fetch('/redirectByRole', {
+                return fetch('/api/public/redirectByRole', {
                     method: 'GET',
                     headers: {
                         'Authorization': 'Bearer ' + data.token

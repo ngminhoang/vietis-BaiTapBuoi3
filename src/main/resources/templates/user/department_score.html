@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <th:block th:replace="../fragments/user_header :: header"></th:block>
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #dddddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        footer {
+            background-color: #dddddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .form-section {
+            margin-top: 20px;
+        }
+
+        #search-input {
+            margin-bottom: 20px;
+            padding: 8px;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>DEPARTMENT SCORE BOARD!</h1>
+
+    <input type="text" id="search-input" placeholder="Search by department name..." onkeyup="filterTable()">
+
+    <table id="data-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Good score</th>
+            <th>Bad score</th>
+            <th>Total score</th>
+        </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</main>
+
+<th:block th:replace="../fragments/footer :: footer"></th:block>
+
+<script>
+    async function fetchData() {
+        try {
+            const response = await fetch('/api/user/score/analyze/department');
+            const data = await response.json();
+
+            const tableBody = document.querySelector('#data-table tbody');
+            tableBody.innerHTML = '';
+
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.departmentId}</td>
+                    <td class="name">${item.departmentName}</td>
+                    <td>${item.countTrue}</td>
+                    <td>${item.countFalse}</td>
+                    <td>${item.countTrue - item.countFalse}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
+    function filterTable() {
+        const searchValue = document.getElementById('search-input').value.toLowerCase();
+        const rows = document.querySelectorAll('#data-table tbody tr');
+
+        rows.forEach(row => {
+            const nameCell = row.querySelector('.name');
+            const nameText = nameCell.textContent.toLowerCase();
+
+            if (nameText.includes(searchValue)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchData);
+</script>
+</body>
+</html>

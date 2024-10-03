@@ -1,6 +1,7 @@
 package com.example.vietisbaitapbuoi3.repositories;
 
 import com.example.vietisbaitapbuoi3.entities.Account;
+import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -23,4 +24,11 @@ public interface AccountRepository  extends JpaRepository<Account,Long> {
     @Modifying
     @Query("UPDATE Account a SET a.department = null WHERE a.department.id = :departmentId")
     void clearDepartmentFromAccounts(@Param("departmentId") Long departmentId);
+
+    @Query("SELECT new com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO(a.id, a.name, " +
+            "SUM(CASE WHEN s.type = true THEN 1 ELSE 0 END), " +
+            "SUM(CASE WHEN s.type = false THEN 1 ELSE 0 END)) " +
+            "FROM Account a LEFT JOIN a.scores s " +
+            "GROUP BY a.id, a.name")
+    List<AccountScoreCountDTO> getAccountWithScoreCount();
 }

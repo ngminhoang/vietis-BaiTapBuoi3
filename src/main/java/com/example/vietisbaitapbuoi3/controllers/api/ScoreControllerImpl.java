@@ -2,6 +2,8 @@ package com.example.vietisbaitapbuoi3.controllers.api;
 
 import com.example.vietisbaitapbuoi3.entities.Account;
 import com.example.vietisbaitapbuoi3.entities.Score;
+import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
+import com.example.vietisbaitapbuoi3.entities.dto.DepartmentScoreCountDTO;
 import com.example.vietisbaitapbuoi3.entities.dto.ScoreRequestDTO;
 import com.example.vietisbaitapbuoi3.services.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,4 +38,15 @@ public class ScoreControllerImpl implements ScoreController {
     public ResponseEntity<Score> createScore(ScoreRequestDTO score) {
         return scoreService.createScore(new Score(score));
     }
+
+    @Override
+    public ResponseEntity<List<DepartmentScoreCountDTO>> getAnalyzeDepartmentScore() {
+        return scoreService.getAnalyzeDepartmentScore();
+    }
+
+    @Override
+    public ResponseEntity<List<AccountScoreCountDTO>> getAnalyzeEmployeeScore() {
+        return scoreService.getAnalyzeEmployeeScore();
+    }
+
 }
