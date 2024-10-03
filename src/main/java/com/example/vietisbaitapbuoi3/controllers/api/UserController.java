@@ -1,33 +1,43 @@
 package com.example.vietisbaitapbuoi3.controllers.api;
 
 import com.example.vietisbaitapbuoi3.entities.Account;
+import com.example.vietisbaitapbuoi3.entities.dto.AccountRequestDTO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/")
+@RequestMapping("/api/")
 public interface UserController {
 
-    @GetMapping("/accounts")
+    @GetMapping("/admin/accounts")
     ResponseEntity<List<Account>> getAllAccounts();
 
-    @GetMapping("/accounts/by-department")
+    @GetMapping("/employee")
+    ResponseEntity<Account> get( @AuthenticationPrincipal Account user);
+
+    @PostMapping("/employee/upload_img")
+    public ResponseEntity<Account> uploadImg(@AuthenticationPrincipal Account user,
+                                             @RequestParam("file") MultipartFile file);
+
+    @GetMapping("/admin/accounts/by-department")
     ResponseEntity<List<Account>> getAccountsByDepartmentCode(@RequestParam String name);
 
-    @GetMapping("/accounts/by-name")
+    @GetMapping("/admin/accounts/by-name")
     ResponseEntity<List<Account>> getAccountsByName(@RequestParam String name);
 
-    @GetMapping("/accounts/{id}")
+    @GetMapping("/admin/accounts/{id}")
     ResponseEntity<Account> getAccountById(@PathVariable Long id);
 
-    @DeleteMapping("/accounts/{id}")
+    @DeleteMapping("/admin/accounts/{id}")
     ResponseEntity<Account> delete(@PathVariable Long id);
 
-    @PutMapping("/accounts")
-    ResponseEntity<Account> update(@RequestBody Account account);
+    @PutMapping("/admin/accounts")
+    ResponseEntity<Account> update(@RequestBody AccountRequestDTO account);
 
-    @PostMapping("/accounts")
-    ResponseEntity<Account> create(@RequestBody Account account);
+    @PostMapping("/admin/accounts")
+    ResponseEntity<Account> create(@RequestBody AccountRequestDTO account);
 }

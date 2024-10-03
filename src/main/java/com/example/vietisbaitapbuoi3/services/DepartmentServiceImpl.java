@@ -4,6 +4,7 @@ import com.example.vietisbaitapbuoi3.entities.Department;
 import com.example.vietisbaitapbuoi3.entities.Department;
 import com.example.vietisbaitapbuoi3.entities.Department;
 import com.example.vietisbaitapbuoi3.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
 import com.example.vietisbaitapbuoi3.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Autowired
     DepartmentRepository departmentRepository;
+    @Autowired
+    AccountRepository accountRepository;
 
     @Override
     public ResponseEntity<List<Department>> getAllDepartment() {
@@ -64,11 +67,14 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public ResponseEntity<Department> deleteDepartment(Long id) {
-        Optional<Department> department = departmentRepository.findById(id);
-        if(department.isPresent()) {
-            departmentRepository.delete(department.get());
-            return ResponseEntity.ok(department.get());
+        Optional<Department> departmentOptional = departmentRepository.findById(id);
+
+        if (departmentOptional.isPresent()) {
+            accountRepository.clearDepartmentFromAccounts(id);
+            departmentRepository.deleteById(id);
+            return ResponseEntity.ok().build(); // Return a success response
+        } else {
+            return ResponseEntity.notFound().build(); // Return a 404 if not found
         }
-        return null;
     }
 }

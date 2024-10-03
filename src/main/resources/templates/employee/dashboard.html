@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${pageTitle}">Home</title>
+    <title>Employee Dashboard</title>
     <th:block th:replace="../fragments/user_header :: header"></th:block>
 
     <style>
@@ -39,58 +39,203 @@
             padding: 10px;
             text-align: center;
         }
+
+        img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .form-section {
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
 <main>
     <h1>Welcome to Employee Dashboard!</h1>
+
+    <table id="accountTable">
+        <tr>
+            <th>Image</th>
+            <td>
+                <img id="accountImage" src="#" alt="Image Preview" style="max-width: 200px; display: none;"/>
+                <form id="uploadForm" enctype="multipart/form-data">
+                    <input type="file" id="imgFile" name="imgFile" accept="image/*">
+                    <button type="button" onclick="uploadImage()">Upload</button>
+                </form>
+            </td>
+        </tr>
+        <tr>
+            <th>ID</th>
+            <td id="accountId"></td>
+        </tr>
+        <tr>
+            <th>Code</th>
+            <td id="accountCode"></td>
+        </tr>
+        <tr>
+            <th>Name</th>
+            <td id="accountName"></td>
+        </tr>
+        <tr>
+            <th>Gender</th>
+            <td id="accountGender"></td>
+        </tr>
+        <tr>
+            <th>Birthday</th>
+            <td id="accountBirthday"></td>
+        </tr>
+        <tr>
+            <th>Salary</th>
+            <td id="accountSalary"></td>
+        </tr>
+        <tr>
+            <th>Level</th>
+            <td id="accountLevel"></td>
+        </tr>
+        <tr>
+            <th>Email</th>
+            <td id="accountMail"></td>
+        </tr>
+        <tr>
+            <th>Phone Number</th>
+            <td id="accountPhone"></td>
+        </tr>
+        <tr>
+            <th>Note</th>
+            <td id="accountNote"></td>
+        </tr>
+    </table>
+
+    <div class="form-section">
+        <!-- Button to open the edit form -->
+        <button onclick="openEditForm()">Edit Account</button>
+    </div>
+
+    <!-- Edit form to update account information -->
+    <div class="form-section" id="editForm" style="display: none;">
+        <h2>Edit Account</h2>
+        <label for="newName">Name:</label>
+        <input type="text" id="newName"><br>
+        <label for="newMail">Email:</label>
+        <input type="text" id="newMail"><br>
+        <label for="newPhoneNumber">Phone Number:</label>
+        <input type="text" id="newPhoneNumber"><br>
+        <button onclick="updateAccount()">Save Changes</button>
+    </div>
 </main>
 
 <th:block th:replace="../fragments/footer :: footer"></th:block>
-<script>
 
-    function checkEmployeeAccess() {
+    <script>
+        const accountId = 1;
+
+        function fetchAccountData() {
+        const token = localStorage.getItem('token');
+
+        fetch(`/api/employee`, {
+        method: 'GET',
+        headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
+    }
+    })
+        .then(response => response.json())
+        .then(account => {
+        document.getElementById('accountId').textContent = account.id;
+        document.getElementById('accountCode').textContent = account.code;
+        document.getElementById('accountName').textContent = account.name;
+        document.getElementById('accountGender').textContent = account.gender ? 'Male' : 'Female';
+
+        const accountImage = document.getElementById('accountImage');
+        if (account.imgPath) {
+        accountImage.src = account.imgPath;
+        accountImage.style.display = 'block';
+    } else {
+        accountImage.style.display = 'none';
+    }
+
+        document.getElementById('accountBirthday').textContent = account.birthday;
+        document.getElementById('accountSalary').textContent = account.salary;
+        document.getElementById('accountLevel').textContent = account.level;
+        document.getElementById('accountMail').textContent = account.mail;
+        document.getElementById('accountPhone').textContent = account.phoneNumber;
+        document.getElementById('accountNote').textContent = account.note;
+    })
+        .catch(error => console.error('Error fetching account:', error));
+    }
+
+        function uploadImage() {
+        const fileInput = document.getElementById('imgFile');
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        const token = localStorage.getItem('token');
+
+        fetch('/api/employee/upload_img', {
+        method: 'POST',
+        headers: {
+        'Authorization': 'Bearer ' + token
+    },
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => {
+        if (data.imgPath) {
+        const accountImage = document.getElementById('accountImage');
+        accountImage.src = data.imgPath;
+        accountImage.style.display = 'block';
+        alert("Image uploaded successfully!");
+    }
+    })
+        .catch(error => {
+        console.error('Error:', error);
+        alert("Failed to upload image.");
+    });
+    }
+
+        // Fetch account data when the page loads
+        fetchAccountData();
+
+        function checkEmployeeAccess() {
         const token = localStorage.getItem('token');
 
         if (!token) {
-            window.location.href = '/login';
-            return;
-        }
+        window.location.href = '/login';
+        return;
+    }
 
         fetch('/api/public/authen_employee', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer ' + token,
-                'Content-Type': 'application/json'
-            }
-        })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Failed to authenticate as admin');
-                }
-                return response.json();
-            })
-            .then(isAdmin => {
-                if (!isAdmin) {
-                    window.location.href = '/login';
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Access denied. Admin privileges required.');
-                window.location.href = '/login';
-            });
+        method: 'POST',
+        headers: {
+        'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json'
     }
-    function logout() {
-        // Remove the token from localStorage
-        localStorage.removeItem("token");
+    })
+        .then(response => {
+        if (!response.ok) {
+        throw new Error('Failed to authenticate as admin');
+    }
+        return response.json();
+    })
+        .then(isAdmin => {
+        if (!isAdmin) {
+        window.location.href = '/login';
+    }
+    })
+        .catch(error => {
+        console.error('Error:', error);
+        alert('Access denied. Admin privileges required.');
+        window.location.href = '/login';
+    });
+    }
 
-        // Redirect to the login page
+        function logout() {
+        localStorage.removeItem("token");
         location.href = '/login';
     }
 
-    checkEmployeeAccess()
-
+        checkEmployeeAccess();
 </script>
 </body>
 </html>

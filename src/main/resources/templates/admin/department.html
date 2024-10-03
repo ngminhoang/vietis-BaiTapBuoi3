@@ -67,7 +67,6 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.4);
-            display: flex;
             justify-content: center;
             align-items: center;
         }
@@ -96,6 +95,28 @@
             color: black;
             text-decoration: none;
         }
+
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #scoreDetails {
+            max-height: 300px;
+            overflow-y: auto;
+            border-top: 1px solid #ddd;
+            margin-top: 10px;
+            padding-top: 10px;
+        }
     </style>
 </head>
 <body>
@@ -108,6 +129,15 @@
         <button id="searchButton">Search</button>
         <button id="createButton">Create New</button>
         <button id="reloadButton">Reload</button>
+    </div>
+
+    <div id="scoreModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" id="closeModalButton">&times;</span>
+            <h2>Score Details of Department :</h2>
+            <h3 id="inforAccount"></h3>
+            <div id="scoreDetails"></div>
+        </div>
     </div>
 
     <div id="createModal" class="modal">
@@ -217,57 +247,198 @@
         fetchData();
     });
 
+
     async function fetchData() {
         try {
-            const departments = await fetch('/api/public/department/get_all').then(response => response.json());
+            // Gọi API lấy dữ liệu account, department và level
+            const [accounts] = await Promise.all([
+                fetch('/api/public/department/get_all').then(response => response.json())
+            ]);
+
             const tableBody = document.querySelector('#data-table tbody');
             tableBody.innerHTML = '';
 
-            departments.forEach(department => {
+            accounts.forEach(item => {
                 const row = document.createElement('tr');
+                row.dataset.id = item.id;
+
                 row.innerHTML = `
-                    <td>${department.id}</td>
-                    <td>${department.code}</td>
-                    <td>${department.name}</td>
-                    <td>
-                        <button class="editButton" data-id="${department.id}">Edit</button>
-                        <button class="deleteButton" data-id="${department.id}">Delete</button>
-                    </td>
-                `;
+                <td>${item.id}</td>
+                <td>
+                    <span class="editable" data-field="code">${item.code}</span>
+                    <input type="text" class="edit-input" data-field="code" value="${item.code}" style="display: none;">
+                </td>
+                <td>
+                    <span class="editable" data-field="name">${item.name}</span>
+                    <input type="text" class="edit-input" data-field="name" value="${item.name}" style="display: none;">
+                </td>
+
+                <td>
+                    <button class="button" onclick="startEdit(${item.id})">Update</button>
+                    <button class="button" onclick="deleteAccount(${item.id})">Delete</button>
+                    <button class="button" onclick="watchScore(${item.id})">Watch Score</button>
+                </td>
+            `;
+
                 tableBody.appendChild(row);
-            });
-
-            // Xử lý sự kiện cho nút sửa và xóa
-            document.querySelectorAll('.editButton').forEach(button => {
-                button.addEventListener('click', () => {
-                    // Logic for editing a department goes here
-                });
-            });
-
-            document.querySelectorAll('.deleteButton').forEach(button => {
-                button.addEventListener('click', async () => {
-                    const departmentId = button.getAttribute('data-id');
-                    const confirmed = confirm('Are you sure you want to delete this department?');
-
-                    if (confirmed) {
-                        try {
-                            await fetch(`/api/admin/departments/${departmentId}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'Authorization': 'Bearer ' + localStorage.getItem('token')
-                                }
-                            });
-                            fetchData(); // Reload the data
-                        } catch (error) {
-                            console.error('Error deleting department:', error);
-                        }
-                    }
-                });
             });
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     }
+
+
+    function startEdit(id) {
+        const row = document.querySelector(`tr[data-id='${id}']`);
+
+        const editableFields = ['name','code'];
+
+        editableFields.forEach(field => {
+            const span = row.querySelector(`span[data-field="${field}"]`);
+            const input = row.querySelector(`input[data-field="${field}"], select[data-field="${field}"]`);
+
+            if (span && input) {
+                span.style.display = 'none';
+                input.style.display = 'inline';
+            }
+        });
+
+        const updateButton = row.querySelector('button');
+        updateButton.textContent = 'Save';
+        updateButton.setAttribute('onclick', `saveChanges(${id})`);
+    }
+
+    async function saveChanges(id) {
+        const row = document.querySelector(`tr[data-id='${id}']`);
+
+        const editableFields = ['name','code'];
+        const updatedData = {};
+
+        editableFields.forEach(field => {
+            const span = row.querySelector(`span[data-field="${field}"]`);
+            const input = row.querySelector(`input[data-field="${field}"], select[data-field="${field}"]`);
+
+            if (span && input) {
+                const updatedValue = input.value;
+                updatedData[field] = updatedValue;
+
+                span.textContent = updatedValue;
+                span.style.display = 'inline';
+                input.style.display = 'none';
+            }
+        });
+
+        const updateButton = row.querySelector('button');
+        updateButton.textContent = 'Update';
+        updateButton.setAttribute('onclick', `startEdit(${id})`);
+
+        try {
+            const response = await fetch(`/api/admin/departments`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                },
+                body: JSON.stringify({
+                    id: id,
+                    ...updatedData
+                })
+            });
+
+            if (response.ok) {
+                fetchData();
+            } else {
+                alert('Failed to update the account.');
+            }
+        } catch (error) {
+            console.error('Error updating account:', error);
+        }
+    }
+
+
+
+    async function deleteAccount(id) {
+        if (confirm("Are you sure you want to delete this account?")) {
+            try {
+                const response = await fetch(`/api/admin/departments/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    }
+                });
+
+                if (response.ok) {
+                    fetchData();
+                } else {
+                    alert('Failed to delete the account.');
+                }
+            } catch (error) {
+                console.error('Error deleting account:', error);
+            }
+        }
+    }
+
+    const scoreModal = document.getElementById('scoreModal');
+    scoreModal.style.alignItems = 'center';
+    scoreModal.style.alignContent = 'center';
+
+    async function watchScore(id) {
+        try {
+            const row = document.querySelector(`tr[data-id='${id}']`);
+
+            const name = row.querySelector(`span[data-field="name"]`);
+            const code = row.querySelector(`span[data-field="code"]`);
+            const date = new Date();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+
+            const response = await fetch(`/api/user/score/list_by_department?id=${id}&month=${month}&year=${year}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status} ${response.statusText}`);
+            }
+
+            // Parse the JSON response
+            const scores = await response.json();
+
+            let goodScore = 0;
+            let badScore = 0;
+            scores.forEach(score=>{
+                if(score.type){
+                    goodScore++;
+                }
+                else badScore++;
+            })
+
+
+            const inforAccount = document.getElementById('inforAccount');
+            inforAccount.textContent = name.textContent +"/"+ code.textContent + " : " + goodScore +"(good) - "+ badScore + "(bad) = " + (goodScore-badScore) +"(score)" ;
+
+            const scoreDetails = document.getElementById('scoreDetails');
+
+            // Clear previous score details
+            scoreDetails.innerHTML = '';
+
+            // Show the modal
+            scoreModal.style.display = 'block';
+
+            // Update the UI with the retrieved scores
+
+        } catch (error) {
+            console.error('Error fetching scores:', error);
+            // Optionally handle errors, e.g., show a notification to the user
+        }
+    }
+
+    scoreModal.addEventListener('click', () => {
+        scoreModal.style.display = 'none';
+    });
 
     async function checkAdminAccess() {
         // Implement your logic for checking admin access here

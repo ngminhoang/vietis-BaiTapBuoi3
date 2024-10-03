@@ -29,4 +29,9 @@ public class DepartmentControllerImpl implements DepartmentController {
     public ResponseEntity<Department> update(Department department) {
         return departmentService.updateDepartment(department);
     }
+
+    @Override
+    public ResponseEntity<Department> delete(Long id) {
+        return departmentService.deleteDepartment(id);
+    }
 }

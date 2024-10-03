@@ -8,4 +8,8 @@ import java.util.List;
 
 public interface ScoreService {
     ResponseEntity<List<Score>> getAllScoreByAccount(Account account);
+    ResponseEntity<Score> createScore(Score score);
+    ResponseEntity<List<Score>> getAllScoreByAccountId(Long id, Integer month, Integer year);
+    ResponseEntity<List<Score>> getAllScoreByDepartmentId(Long id, Integer month, Integer year);
+
 }

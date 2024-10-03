@@ -1,5 +1,7 @@
 package com.example.vietisbaitapbuoi3.entities;
 
+import com.example.vietisbaitapbuoi3.entities.dto.ScoreRequestDTO;
+import com.example.vietisbaitapbuoi3.utils.UserUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,5 +31,13 @@ public class Score {
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
+
+    public Score(ScoreRequestDTO scoreRequestDTO) {
+        this.date = scoreRequestDTO.getDate();
+        this.type = scoreRequestDTO.getType();
+        this.reason = scoreRequestDTO.getReason();
+        this.id = scoreRequestDTO.getId();
+        this.account = UserUtil.getAccountById(scoreRequestDTO.getAccountId());
+    }
 }
 
