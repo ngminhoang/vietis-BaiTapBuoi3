@@ -12,8 +12,8 @@
     <nav style="display: flex; gap: 10px;">
         <button onclick="location.href='/'">Home</button>
         <button onclick="location.href='/employee/dashboard'">Information</button>
-        <button onclick="location.href='/user/employee_score'">Employee</button>
-        <button onclick="location.href='/user/department_score'">Department</button>
+        <button onclick="location.href='/employee/employee_score'">Employee</button>
+        <button onclick="location.href='/employee/department_score'">Department</button>
         <button onclick="logout()">Logout</button>
     </nav>
 </header>
@@ -25,20 +25,10 @@
 </html>
 <script>
     function logout() {
-        // Remove the token from localStorage
         localStorage.removeItem("token");
 
-        // Redirect to the login page
         location.href = '/login';
     }
 </script>
-
-
-<!--Auto generate, mat khau, code-->
-
 <!--Header-->
-
-<!--Employee-->
-
-<!--Top 10-->
 <!--laguage-->

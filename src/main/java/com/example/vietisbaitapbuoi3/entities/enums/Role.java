@@ -1,9 +1,9 @@
 package com.example.vietisbaitapbuoi3.entities.enums;
 
 public enum Role {
-    ADMIN(1),
-    MANAGER(2),
-    EMPLOYEE(3);
+    ROLE_ADMIN(1),
+    ROLE_MANAGER(2),
+    ROLE_EMPLOYEE(3);
 
     private final int value;
 

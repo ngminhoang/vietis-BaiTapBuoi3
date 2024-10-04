@@ -28,18 +28,17 @@ public class SecurityConfig implements WebMvcConfigurer {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(x -> x.disable()).authorizeRequests()
-//                .requestMatchers("/api/user/**").hasRole("ADMIN")
-//                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                .requestMatchers("/uploads/**").permitAll()
-                .requestMatchers("/**")
-
-                .permitAll()
-                .anyRequest()
-                .authenticated()
-                .and()
+                .csrf(csrf -> csrf.disable())  // Disable CSRF protection if necessary
+                .authorizeRequests(auth -> auth
+                        .requestMatchers("/api/employee/**").hasRole("EMPLOYEE")
+                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/uploads/**").permitAll()
+                        .anyRequest().permitAll()
+                )
+                // Add custom authentication provider and JWT filter
                 .authenticationProvider(authenticationManager)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

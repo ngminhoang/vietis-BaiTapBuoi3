@@ -38,44 +38,44 @@
 
     <form id="registerForm">
         <div>
-            <label for="name">Name:</label>
+            <label for="name">#{Name}:</label>
             <input type="text" id="name" name="name" placeholder="Enter your name" required>
         </div>
 
         <div>
-            <label for="mail">Email:</label>
+            <label for="mail" th:text=''>#{Email}:</label>
             <input type="email" id="mail" name="mail" placeholder="Enter your email" required>
         </div>
 
         <div>
-            <label for="gender">Gender:</label>
+            <label for="gender" th:text=''>#{Gender}:</label>
             <select id="gender" name="gender" required>
-                <option value="true">Male</option>
-                <option value="false">Female</option>
+                <option value="true" th:text=''>#{Male}</option>
+                <option value="false" th:text=''>#{Female}</option>
             </select>
         </div>
 
         <div>
-            <label for="birthday">Birthday:</label>
+            <label for="birthday" th:text=''>#{Birthday}:</label>
             <input type="date" id="birthday" name="birthday" required>
         </div>
 
         <div>
-            <label for="phoneNumber">Phone Number:</label>
+            <label for="phoneNumber" th:text=''>#{Phone_Number}:</label>
             <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number" required>
         </div>
 
         <div>
-            <label for="password">Password:</label>
+            <label for="password" th:text=''>#{Password}:</label>
             <input type="password" id="password" name="password" placeholder="Enter your password" required>
         </div>
 
         <div>
-            <button type="submit">Register</button>
+            <button type="submit" th:text=''>#{Register}</button>
         </div>
     </form>
 
-    <div id="message"></div> <!-- To display success or error message -->
+    <div id="message"></div>
 
 </div>
 

@@ -2,6 +2,8 @@ package com.example.vietisbaitapbuoi3.controllers.api;
 
 import com.example.vietisbaitapbuoi3.entities.Account;
 import com.example.vietisbaitapbuoi3.entities.Department;
+import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
+import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountInforDTO;
 import com.example.vietisbaitapbuoi3.services.AccountService;
 import com.example.vietisbaitapbuoi3.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,18 +36,22 @@ public class PublicControllerImpl implements PublicController {
         return departmentService.getAllLevel();
     }
 
+    @Override
+    public ResponseEntity<List<AccountScoreCountInforDTO>> getTopAccount() {
+        return accountService.getTopAccount();
+    }
+
     @GetMapping("/redirectByRole")
     public String redirectByRole(@AuthenticationPrincipal Account user) {
         if (user == null) {
             return "/login";
         }
-
         switch (user.getRole()) {
-            case ADMIN:
+            case ROLE_ADMIN:
                 return "/admin/dashboard";
-            case EMPLOYEE:
+            case ROLE_EMPLOYEE:
                 return "/employee/dashboard";
-            case MANAGER:
+            case ROLE_MANAGER:
                 return "/manager/dashboard";
             default:
                 return "/";

@@ -58,18 +58,18 @@
 </head>
 <body>
 <main>
-    <h1>EMPLOYEE SCORE BOARD!</h1>
+    <h1 th:text=''>#{DEPARTMENT_SCORE_BOARD}!</h1>
 
-    <input type="text" id="search-input" placeholder="Search by employee name..." onkeyup="filterTable()">
+    <input type="text" id="search-input" placeholder="Search by department name..." onkeyup="filterTable()">
 
     <table id="data-table">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Good score</th>
-            <th>Bad score</th>
-            <th>Total score</th>
+            <th th:text=''>#{Name}</th>
+            <th th:text=''>#{Good_score}</th>
+            <th th:text=''>#{Bad_score}</th>
+            <th th:text=''>#{Total_score}</th>
         </tr>
         </thead>
         <tbody>
@@ -82,7 +82,7 @@
 <script>
     async function fetchData() {
         try {
-            const response = await fetch('/api/user/score/analyze/employee');
+            const response = await fetch('/api/user/score/analyze/department');
             const data = await response.json();
 
             const tableBody = document.querySelector('#data-table tbody');
@@ -91,8 +91,8 @@
             data.forEach(item => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${item.accountId}</td>
-                    <td class="name">${item.accountName}</td>
+                    <td>${item.departmentId}</td>
+                    <td class="name">${item.departmentName}</td>
                     <td>${item.countTrue}</td>
                     <td>${item.countFalse}</td>
                     <td>${item.countTrue - item.countFalse}</td>
@@ -121,6 +121,45 @@
     }
 
     document.addEventListener('DOMContentLoaded', fetchData);
+    function checkEmployeeAccess() {
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = '/login';
+            return;
+        }
+
+        fetch('/api/public/authen_employee', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to authenticate as admin');
+                }
+                return response.json();
+            })
+            .then(isAdmin => {
+                if (!isAdmin) {
+                    window.location.href = '/login';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Access denied. Admin privileges required.');
+                window.location.href = '/login';
+            });
+    }
+
+    function logout() {
+        localStorage.removeItem("token");
+        location.href = '/login';
+    }
+
+    checkEmployeeAccess();
 </script>
 </body>
 </html>

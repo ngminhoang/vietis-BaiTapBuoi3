@@ -142,7 +142,7 @@
     <div id="scoreModal" class="modal">
         <div class="modal-content">
             <span class="close-button" id="closeModalButton">&times;</span>
-            <h2>Score Details of :</h2>
+            <h2 th:text='#{Score_Details_of}'>#{Score_Details_of} :</h2>
             <h3 id="inforAccount"></h3>
             <div id="scoreDetails"></div>
         </div>
@@ -152,35 +152,41 @@
     <div id="createModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
-            <h2>Create New Account</h2>
+            <h2 th:text='#{Create_New_Account}'>#{Create New Account}</h2>
             <form id="createAccountForm">
-                <label for="name">Name:</label>
+                <label for="name" th:text='#{Name}'>#{Name}:</label>
                 <input type="text" id="name" name="name" required>
 
-                <label for="mail">Email:</label>
+                <label for="mail" th:text='#{Email}'>#{Email}:</label>
                 <input type="mail" id="mail" name="mail" required>
 
-                <label for="gender">Gender:</label>
+                <label for="gender" th:text='#{Gender}'>#{Gender}:</label>
                 <select id="gender" name="gender">
-                    <option value="1">Male</option>
-                    <option value="0">Female</option>
+                    <option value="1" th:text='#{Male}'>#{Male}</option>
+                    <option value="0" th:text='#{Female}'>#{Female}</option>
                 </select>
 
-                <label for="birthday">Birthday:</label>
+                <label for="birthday" th:text='#{Birthday}'>#{Birthday}:</label>
                 <input type="date" id="birthday" name="birthday" required>
 
-                <label for="phoneNumber">Phone Number:</label>
+                <label for="phoneNumber" th:text='#{Phone_Number}'>#{Phone Number}:</label>
                 <input type="text" id="phoneNumber" name="phoneNumber" required>
 
-                <label for="level">Level:</label>
+                <label for="level" th:text='#{Level}'>#{Level}:</label>
                 <select id="level" name="level" required>
                 </select>
 
-                <label for="department">Department:</label>
+                <label for="department" th:text='#{Department}'>#{Department}:</label>
                 <select id="department" name="department" required>
                 </select>
+                <br>
+                <label for="salary" th:text='#{Salary}'>#{Salary}:</label>
+                <input type="number" id="salary" name="salary">
 
-                <button type="submit">Create Account</button>
+                <label for="note" th:text='#{Note}'>#{Note}:</label>
+                <input type="text" id="note" name="note">
+
+                <button type="submit" th:text='#{Create_Account}'>#{Create_Account}</button>
             </form>
         </div>
     </div>
@@ -189,15 +195,17 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>Code</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Gender</th>
-            <th>Birthday</th>
-            <th>Phone Number</th>
-            <th>Level</th>
-            <th>Department</th>
-            <th>Actions</th>
+            <th th:text='#{Code}'>#{Code}</th>
+            <th th:text='#{Name}'>#{Name}</th>
+            <th th:text='#{Email}'>#{Email}</th>
+            <th th:text='#{Gender}'>#{Gender}</th>
+            <th th:text='#{Birthday}'>#{Birthday}</th>
+            <th th:text='#{Phone_Number}'>#{Phone Number}</th>
+            <th th:text='#{Level}'>#{Level}</th>
+            <th th:text='#{Salary}'>#{Salary}</th>
+            <th th:text='#{Department}'>#{Department}</th>
+            <th th:text='#{Note}'>#{Note}</th>
+            <th th:text='#{Actions}'>#{Actions}</th>
         </tr>
         </thead>
         <tbody>
@@ -295,49 +303,6 @@
 
         const createAccountForm = document.getElementById('createAccountForm');
 
-        async function createAccount(event) {
-            event.preventDefault(); // Ngăn chặn gửi form mặc định
-
-            // Lấy dữ liệu từ form
-            const data = {
-                name: document.getElementById('name').value,
-                mail: document.getElementById('mail').value,
-                gender: document.getElementById('gender').value,
-                birthday: document.getElementById('birthday').value,
-                phoneNumber: document.getElementById('phoneNumber').value,
-                level: document.getElementById('level').value,
-                departmentId: document.getElementById('department').value
-            };
-
-            // Chuyển đổi giá trị gender từ "1" hoặc "0" thành true hoặc false
-            if (data.gender === "1") {
-                data.gender = true;  // Male
-            } else if (data.gender === "0") {
-                data.gender = false; // Female
-            }
-
-            try {
-                const response = await fetch('/api/admin/accounts', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    },
-                    body: JSON.stringify(data)
-                });
-
-                if (response.ok) {
-                    alert('Account created successfully!');
-                    fetchData();  // Refresh the account list after creating
-                    document.getElementById('createModal').style.display = 'none';  // Hide the modal
-                    document.getElementById('createAccountForm').reset();  // Reset the form after successful creation
-                } else {
-                    alert('Failed to create account. Please try again.');
-                }
-            } catch (error) {
-                console.error('Error creating account:', error);
-            }
-        }
 
 
         createAccountForm.onsubmit = async (event) => {
@@ -352,7 +317,9 @@
                 birthday: document.getElementById('birthday').value,
                 phoneNumber: document.getElementById('phoneNumber').value,
                 level: document.getElementById('level').value,
-                departmentId: document.getElementById('department').value
+                departmentId: document.getElementById('department').value,
+                salary: document.getElementById('salary').value,
+                note: document.getElementById('note').value
             };
 
             // Chuyển đổi giá trị gender từ "1" hoặc "0" thành true hoặc false
@@ -451,7 +418,6 @@
                 <td>${item.id}</td>
                 <td>
                     <span class="editable" data-field="code">${item.code}</span>
-                    <input type="text" class="edit-input" data-field="code" value="${item.code}" style="display: none;">
                 </td>
                 <td>
                     <span class="editable" data-field="name">${item.name}</span>
@@ -483,10 +449,18 @@
                     </select>
                 </td>
                 <td>
+                    <span class="editable" data-field="salary">${item.salary}</span>
+                    <input type="number" class="edit-input" data-field="salary" value="${item.salary}" style="display: none;">
+                </td>
+                <td>
                     <span class="editable" data-field="departmentId">${item.department ? item.department.name : 'N/A'}</span>
                     <select class="edit-input" data-field="departmentId" style="display: none;">
                         ${departmentOptions}
                     </select>
+                </td>
+                <td>
+                    <span class="editable" data-field="note">${item.note}</span>
+                    <input type="text" class="edit-input" data-field="note" value="${item.note}" style="display: none;">
                 </td>
                 <td>
                     <button class="button" onclick="startEdit(${item.id})">Update</button>
@@ -523,7 +497,7 @@
     function startEdit(id) {
         const row = document.querySelector(`tr[data-id='${id}']`);
 
-        const editableFields = ['name', 'mail', 'code', 'gender', 'birthday', 'phoneNumber', 'level', 'departmentId'];
+        const editableFields = ['name', 'mail', 'gender', 'birthday', 'phoneNumber', 'level', 'departmentId','note','salary'];
 
         editableFields.forEach(field => {
             const span = row.querySelector(`span[data-field="${field}"]`);
@@ -543,7 +517,7 @@
     async function saveChanges(id) {
         const row = document.querySelector(`tr[data-id='${id}']`);
 
-        const editableFields = ['name', 'mail', 'code', 'gender', 'birthday', 'phoneNumber', 'level', 'departmentId'];
+        const editableFields = ['name', 'mail', 'gender', 'birthday', 'phoneNumber', 'level', 'departmentId', 'salary', 'note'];
         const updatedData = {};
 
         editableFields.forEach(field => {
@@ -649,13 +623,11 @@
 
             const scoreDetails = document.getElementById('scoreDetails');
 
-            // Clear previous score details
             scoreDetails.innerHTML = '';
 
             // Show the modal
             scoreModal.style.display = 'block';
 
-            // Update the UI with the retrieved scores
             scores.forEach(score => {
                 const scoreItem = document.createElement('div');
                 scoreItem.innerHTML = `
@@ -669,7 +641,6 @@
             });
         } catch (error) {
             console.error('Error fetching scores:', error);
-            // Optionally handle errors, e.g., show a notification to the user
         }
     }
 
@@ -680,25 +651,22 @@
 
     function addScore(id) {
         const scoreDiv = document.getElementById(`scoreDiv-${id}`);
-        scoreDiv.style.display = 'block';  // Show the div
+        scoreDiv.style.display = 'block';
     }
 
-    // Hide the div when "Close" is clicked
     function closeScore(id) {
         const scoreDiv = document.getElementById(`scoreDiv-${id}`);
-        scoreDiv.style.display = 'none';  // Hide the div
+        scoreDiv.style.display = 'none';
     }
 
-    // Handle the score submission when "Submit" is clicked
     async function submitScore(id) {
         // Get the selected score type
         const scoreType = document.querySelector(`input[name="scoreType-${id}"]:checked`).value;
         const reason = document.getElementById(`comment-${id}`).value;
 
-        // Data to send to the API
         const data = {
-            accountId: id,           // Account ID
-            type: scoreType === 'good', // Convert "good" to true and "bad" to false
+            accountId: id,
+            type: scoreType === 'good',
             reason: reason
         };
 
@@ -727,12 +695,10 @@
 
     function checkAdminAccess() {
         const token = localStorage.getItem('token');
-
         if (!token) {
             window.location.href = '/login';
             return;
         }
-
         fetch('/api/public/authen_admin', {
             method: 'POST',
             headers: {
@@ -760,7 +726,6 @@
 
     function logout() {
         localStorage.removeItem("token");
-
         location.href = '/login';
     }
 

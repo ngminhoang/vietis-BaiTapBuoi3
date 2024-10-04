@@ -35,7 +35,9 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public ResponseEntity<Department> createDepartment(Department department) {
-        return ResponseEntity.ok(departmentRepository.save(department));
+        Department newDepartment = departmentRepository.save(department);
+        newDepartment.setCode("DEP-"+department.getId().toString());
+        return ResponseEntity.ok(departmentRepository.save(newDepartment));
     }
 
     @Override

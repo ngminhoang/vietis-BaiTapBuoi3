@@ -2,7 +2,9 @@ package com.example.vietisbaitapbuoi3.repositories;
 
 import com.example.vietisbaitapbuoi3.entities.Account;
 import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
+import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountInforDTO;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -31,4 +33,11 @@ public interface AccountRepository  extends JpaRepository<Account,Long> {
             "FROM Account a LEFT JOIN a.scores s " +
             "GROUP BY a.id, a.name")
     List<AccountScoreCountDTO> getAccountWithScoreCount();
+
+    @Query("SELECT new com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountInforDTO(a.id, a.name, a.imgPath, d.name) " +
+            "FROM Account a LEFT JOIN a.scores s " +
+            "LEFT JOIN a.department d " +
+            "GROUP BY a.id, a.name, a.imgPath, d.name " +
+            "ORDER BY (SUM(CASE WHEN s.type = true THEN 1 ELSE 0 END) - SUM(CASE WHEN s.type = false THEN 1 ELSE 0 END)) DESC")
+    List<AccountScoreCountInforDTO> getTop10AccountsByScoreDifference(Pageable pageable);
 }

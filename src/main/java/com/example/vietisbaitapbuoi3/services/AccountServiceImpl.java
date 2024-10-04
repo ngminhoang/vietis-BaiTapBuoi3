@@ -1,10 +1,15 @@
 package com.example.vietisbaitapbuoi3.services;
 
 import com.example.vietisbaitapbuoi3.entities.Account;
+import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
+import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountInforDTO;
+import com.example.vietisbaitapbuoi3.entities.dto.ChangePasswordDTO;
 import com.example.vietisbaitapbuoi3.entities.enums.Role;
 import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Field;
@@ -16,7 +21,8 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public ResponseEntity<List<Account>> getAllAccounts() {
@@ -40,8 +46,11 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public ResponseEntity<Account> createAccount(Account account) {
-        account.setRole(Role.EMPLOYEE);
-        return ResponseEntity.ok( accountRepository.save(account));
+        account.setRole(Role.ROLE_EMPLOYEE);
+        account.setPassword(passwordEncoder.encode("123456"));
+        Account newAccount =  accountRepository.save(account);
+        newAccount.setCode("STAFF-"+newAccount.getId().toString());
+        return ResponseEntity.ok(accountRepository.save(newAccount));
     }
 
     @Override
@@ -60,25 +69,37 @@ public class AccountServiceImpl implements AccountService {
         if (originAccountOpt.isPresent()) {
             Account originAccount = originAccountOpt.get();
 
-            // Dùng Reflection để kiểm tra và cập nhật các trường thay đổi
             Field[] fields = Account.class.getDeclaredFields();
             for (Field field : fields) {
-                field.setAccessible(true); // Đảm bảo có thể truy cập các trường private
+                field.setAccessible(true);
                 try {
-                    Object newValue = field.get(account);          // Lấy giá trị của trường từ đối tượng account
-                    Object originalValue = field.get(originAccount); // Lấy giá trị của trường từ originAccount
+                    Object newValue = field.get(account);
+                    Object originalValue = field.get(originAccount);
 
-                    // Nếu giá trị khác nhau thì cập nhật
                     if (newValue != null && !newValue.equals(originalValue)) {
                         field.set(originAccount, newValue);
                     }
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace(); // Xử lý ngoại lệ truy cập
+                    e.printStackTrace();
                 }
             }
-
-            // Sau khi cập nhật các trường, lưu lại đối tượng originAccount
             return ResponseEntity.ok(accountRepository.save(originAccount));
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @Override
+    public ResponseEntity<List<AccountScoreCountInforDTO>> getTopAccount() {
+        return ResponseEntity.ok(accountRepository.getTop10AccountsByScoreDifference(PageRequest.of(0, 10) ));
+    }
+
+    @Override
+    public ResponseEntity<Account> changePassword(Account user, ChangePasswordDTO changePasswordDTO) {
+        String encodeOldPassword = passwordEncoder.encode(changePasswordDTO.getOldPassword());
+        if(encodeOldPassword.equals(user.getPassword())) {
+            String encodeNewPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
+            user.setPassword(encodeNewPassword);
+            return ResponseEntity.ok(accountRepository.save(user));
         }
         return ResponseEntity.notFound().build();
     }

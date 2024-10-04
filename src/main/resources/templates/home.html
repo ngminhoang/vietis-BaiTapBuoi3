@@ -34,6 +34,12 @@
             background-color: #f2f2f2;
         }
 
+        td img {
+            max-width: 100px;
+            max-height: 100px;
+            object-fit: cover;
+        }
+
         footer {
             background-color: #dddddd;
             padding: 10px;
@@ -43,13 +49,22 @@
 </head>
 <body>
 <main>
-    <h1>Top 7 the highest credit in VietIS:</h1>
+
+    <form action="#" th:action="@{/change-language}" method="post">
+        <select name="lang" onchange="this.form.submit()">
+            <option value="en" th:selected="${#locale.language == 'en'}">English</option>
+            <option value="vi" th:selected="${#locale.language == 'vi'}">Tiếng Việt</option>
+        </select>
+    </form>
+
+
+    <h1  th:text='#{Top_10_the_highest_credit_in_VietIS}'>#{Top_10_the_highest_credit_in_VietIS}:</h1>
     <table id="data-table">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
+            <th th:text='#{Name}'>Name</th>
+            <th th:text='#{Image}'>Image</th>
+            <th th:text='#{Department}'>Department</th>
         </tr>
         </thead>
         <tbody>
@@ -62,7 +77,7 @@
 <script>
     async function fetchData() {
         try {
-            const response = await fetch('/api/public/get_all');
+            const response = await fetch('/api/public/account/get_top');
             const data = await response.json();
 
             const tableBody = document.querySelector('#data-table tbody');
@@ -71,9 +86,9 @@
             data.forEach(item => {
                 const row = document.createElement('tr');
                 row.innerHTML = `
-                    <td>${item.id}</td>
-                    <td>${item.name}</td>
-                    <td>${item.mail}</td>
+                    <td>${item.accountName}</td>
+                    <td><img src="${item.imgPath}" alt="Profile Image"/></td>
+                    <td>${item.departmentName}</td>
                 `;
                 tableBody.appendChild(row);
             });
@@ -82,8 +97,64 @@
         }
     }
 
-    // Call fetchData when the page loads
     document.addEventListener('DOMContentLoaded', fetchData);
+
+    function checkAdminAccess() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return;
+        }
+
+        fetch('/api/public/authen_admin', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(isAdmin => {
+                if (isAdmin) {
+                    document.getElementById('admin').style.display = 'flex';
+                    document.getElementById('public').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    function checkAccess() {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            return;
+        }
+
+        fetch('/api/public/authen_employee', {
+            method: 'POST',
+            headers: {
+                'Authorization': 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(response => response.json())
+            .then(isEmployee => {
+                if (isEmployee) {
+                    document.getElementById('employee').style.display = 'flex';
+                    document.getElementById('public').style.display = 'none';
+
+                } else {
+                    checkAdminAccess();
+                }
+            })
+            .catch(() => checkAdminAccess());
+    }
+
+    document.addEventListener('DOMContentLoaded', checkAccess);
+    function logout() {
+        localStorage.removeItem("token");
+        location.href = '/login';
+    }
 </script>
 </body>
 </html>

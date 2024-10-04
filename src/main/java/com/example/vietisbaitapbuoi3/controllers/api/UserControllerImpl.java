@@ -2,6 +2,7 @@ package com.example.vietisbaitapbuoi3.controllers.api;
 
 import com.example.vietisbaitapbuoi3.entities.Account;
 import com.example.vietisbaitapbuoi3.entities.dto.AccountRequestDTO;
+import com.example.vietisbaitapbuoi3.entities.dto.ChangePasswordDTO;
 import com.example.vietisbaitapbuoi3.services.AccountService;
 import com.example.vietisbaitapbuoi3.utils.FileUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +51,9 @@ public class UserControllerImpl implements UserController {
         }
     }
 
+    public ResponseEntity<Account> changePassword(@AuthenticationPrincipal Account user, @RequestBody ChangePasswordDTO changePasswordDTO) {
+        return accountService.changePassword(user, changePasswordDTO);
+    }
 
     @Override
 

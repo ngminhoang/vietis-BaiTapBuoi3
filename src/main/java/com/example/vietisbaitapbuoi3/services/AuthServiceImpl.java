@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
                 .name(request.getName())
                 .mail(request.getMail())
                 .password(encryptedPassword)
-                .role(Role.EMPLOYEE)
+                .role(Role.ROLE_EMPLOYEE)
                 .build();
 
         accountRepository.save(user);
@@ -63,12 +63,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public ResponseEntity<Boolean> authenAdmin(Account account) {
         Optional<Account> existingUser = accountRepository.findById(account.getId());
-        return existingUser.isPresent() && existingUser.get().getRole().equals(Role.ADMIN)? ResponseEntity.ok(true): ResponseEntity.notFound().build();
+        return existingUser.isPresent() && existingUser.get().getRole().equals(Role.ROLE_ADMIN)? ResponseEntity.ok(true): ResponseEntity.ok(false);
     }
     @Override
     public ResponseEntity<Boolean> authenEmployee(Account account) {
         Optional<Account> existingUser = accountRepository.findById(account.getId());
-        return existingUser.isPresent() && existingUser.get().getRole().equals(Role.EMPLOYEE)? ResponseEntity.ok(true): ResponseEntity.notFound().build();
+        return existingUser.isPresent() && existingUser.get().getRole().equals(Role.ROLE_EMPLOYEE)? ResponseEntity.ok(true): ResponseEntity.ok(false);
     }
 
 }
