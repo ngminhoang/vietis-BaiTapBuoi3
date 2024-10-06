@@ -45,11 +45,25 @@
             padding: 10px;
             text-align: center;
         }
+
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
 <main>
-
     <form action="#" th:action="@{/change-language}" method="post">
         <select name="lang" onchange="this.form.submit()">
             <option value="en" th:selected="${#locale.language == 'en'}">English</option>
@@ -57,8 +71,10 @@
         </select>
     </form>
 
+    <h1 th:text="#{Top_10_the_highest_credit_in_VietIS}">Top 10 the highest credit in VietIS</h1>
 
-    <h1  th:text='#{Top_10_the_highest_credit_in_VietIS}'>#{Top_10_the_highest_credit_in_VietIS}:</h1>
+
+    <p th:text="#{Score_Details_of}">Score Details of</p>
     <table id="data-table">
         <thead>
         <tr>
@@ -151,6 +167,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', checkAccess);
+
     function logout() {
         localStorage.removeItem("token");
         location.href = '/login';

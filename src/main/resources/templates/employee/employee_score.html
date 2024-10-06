@@ -3,10 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>#{Employee Dashboard</title>
+    <title th:text="#{Employee_Dashboard}">Employee Dashboard</title>
     <th:block th:replace="../fragments/user_header :: header"></th:block>
 
     <style>
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
         html, body {
             height: 100%;
             margin: 0;
@@ -58,7 +73,7 @@
 </head>
 <body>
 <main>
-    <h1 th:text=''>#{EMPLOYEE_SCORE_BOARD}!</h1>
+    <h1 th:text="#{EMPLOYEE_SCORE_BOARD}">Employee Score Board</h1>
 
     <input type="text" id="search-input" placeholder="Search by employee name..." onkeyup="filterTable()">
 
@@ -66,10 +81,10 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th th:text=''>#{Name}</th>
-            <th th:text=''>#{Good_score}</th>
-            <th th:text=''>#{Bad_score}</th>
-            <th th:text=''>#{Total_score}</th>
+            <th th:text="#{Name}">Name</th>
+            <th th:text="#{Good_score}">Good Score</th>
+            <th th:text="#{Bad_score}">Bad Score</th>
+            <th th:text="#{Total_score}">Total Score</th>
         </tr>
         </thead>
         <tbody>
@@ -121,6 +136,7 @@
     }
 
     document.addEventListener('DOMContentLoaded', fetchData);
+
     function checkEmployeeAccess() {
         const token = localStorage.getItem('token');
 

@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
     <th:block th:replace="../fragments/header :: header"></th:block>
     <style>
         html, body {
             height: 100%;
             margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
             display: flex;
             flex-direction: column;
         }
@@ -17,67 +18,149 @@
         main {
             flex: 1;
             padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
         }
 
         form {
-            margin-bottom: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        form label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        form input[type="text"],
+        form input[type="email"],
+        form input[type="date"],
+        form input[type="password"],
+        form select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        form input:focus,
+        form select:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        form button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        form button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 20px;
+            color: red;
+            text-align: center;
         }
 
         footer {
             background-color: #dddddd;
             padding: 10px;
             text-align: center;
-            margin-top: auto;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Register</h2>
+<main>
+    <div class="container">
+        <h2 th:text="#{Register}">Register</h2>
 
-    <form id="registerForm">
-        <div>
-            <label for="name">#{Name}:</label>
-            <input type="text" id="name" name="name" placeholder="Enter your name" required>
-        </div>
+        <form id="registerForm">
+            <div>
+                <label for="name" th:text="#{Name}">Name:</label>
+                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
 
-        <div>
-            <label for="mail" th:text=''>#{Email}:</label>
-            <input type="email" id="mail" name="mail" placeholder="Enter your email" required>
-        </div>
+            <div>
+                <label for="mail" th:text='#{Email}'>Email:</label>
+                <input type="email" id="mail" name="mail" placeholder="Enter your email" required>
+            </div>
 
-        <div>
-            <label for="gender" th:text=''>#{Gender}:</label>
-            <select id="gender" name="gender" required>
-                <option value="true" th:text=''>#{Male}</option>
-                <option value="false" th:text=''>#{Female}</option>
-            </select>
-        </div>
+            <div>
+                <label for="gender" th:text='#{Gender}'>Gender:</label>
+                <select id="gender" name="gender" required>
+                    <option value="true" th:text='#{Male}'>Male</option>
+                    <option value="false" th:text='#{Female}'>Female</option>
+                </select>
+            </div>
 
-        <div>
-            <label for="birthday" th:text=''>#{Birthday}:</label>
-            <input type="date" id="birthday" name="birthday" required>
-        </div>
+            <div>
+                <label for="birthday" th:text='#{Birthday}'>Birthday:</label>
+                <input type="date" id="birthday" name="birthday" required>
+            </div>
 
-        <div>
-            <label for="phoneNumber" th:text=''>#{Phone_Number}:</label>
-            <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number" required>
-        </div>
+            <div>
+                <label for="phoneNumber" th:text='#{Phone_Number}'>Phone Number:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" placeholder="Enter phone number" required>
+            </div>
 
-        <div>
-            <label for="password" th:text=''>#{Password}:</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-        </div>
+            <div>
+                <label for="password" th:text='#{Password}'>Password:</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
 
-        <div>
-            <button type="submit" th:text=''>#{Register}</button>
-        </div>
-    </form>
+            <div>
+                <button type="submit" th:text='#{Register}'>Register</button>
+            </div>
+        </form>
 
-    <div id="message"></div>
-
-</div>
+        <div id="message"></div>
+    </div>
+</main>
 
 <script>
     // Handle the form submission
@@ -116,7 +199,6 @@
             })
             .then(data => {
                 localStorage.setItem('token', data.token);
-
                 window.location.href = '/employee/dashboard';
             })
             .catch(error => {
@@ -125,6 +207,7 @@
             });
     });
 </script>
+
 <th:block th:replace="../fragments/footer :: footer"></th:block>
 
 </body>

@@ -30,9 +30,9 @@ public class SecurityConfig implements WebMvcConfigurer {
         http
                 .csrf(csrf -> csrf.disable())  // Disable CSRF protection if necessary
                 .authorizeRequests(auth -> auth
-                        .requestMatchers("/api/employee/**").hasRole("EMPLOYEE")
-                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/uploads/**").permitAll()
+//                        .requestMatchers("/api/employee/**").hasRole("EMPLOYEE")
+//                        .requestMatchers("/api/admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/uploads/**").permitAll()
                         .anyRequest().permitAll()
                 )
                 // Add custom authentication provider and JWT filter

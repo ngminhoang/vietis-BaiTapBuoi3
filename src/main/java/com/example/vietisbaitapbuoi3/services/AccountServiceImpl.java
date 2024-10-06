@@ -1,5 +1,6 @@
 package com.example.vietisbaitapbuoi3.services;
 
+import com.example.vietisbaitapbuoi3.authentication.AuthenticationResponse;
 import com.example.vietisbaitapbuoi3.entities.Account;
 import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
 import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountInforDTO;
@@ -96,11 +97,13 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResponseEntity<Account> changePassword(Account user, ChangePasswordDTO changePasswordDTO) {
         String encodeOldPassword = passwordEncoder.encode(changePasswordDTO.getOldPassword());
-        if(encodeOldPassword.equals(user.getPassword())) {
+
+        if (passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
             String encodeNewPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
             user.setPassword(encodeNewPassword);
             return ResponseEntity.ok(accountRepository.save(user));
         }
+
         return ResponseEntity.notFound().build();
     }
 }

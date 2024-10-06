@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Login</title>
+    <title th:text="#{Login}">Login</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <th:block th:replace="../fragments/header :: header"></th:block>
@@ -9,58 +9,108 @@
         html, body {
             height: 100%;
             margin: 0;
-            display: flex;
-            flex-direction: column;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
         }
 
         main {
             flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
 
-        form {
-            margin-bottom: auto;
+        .container {
+            width: 100%;
+            max-width: 400px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
-        footer {
-            background-color: #dddddd;
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        input[type="email"],
+        input[type="password"] {
             padding: 10px;
-            text-align: center;
-            margin-top: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #message {
+            margin-top: 20px;
+            color: red;
         }
     </style>
 </head>
 <body>
 <main>
-    <h1>Login</h1>
+    <div class="container">
+        <h1 th:text="#{Login}">Login</h1>
 
-    <form id="loginForm">
-        <label for="mail" th:text=''>#{Email}:</label>
-        <input type="email" id="mail" name="mail" required><br>
+        <form id="loginForm">
+            <label for="mail" th:text="#{Email}">Email:</label>
+            <input type="email" id="mail" name="mail" required>
 
-        <label for="password" th:text=''>#{Password}:</label>
-        <input type="password" id="password" name="password" required><br>
+            <label for="password" th:text="#{Password}">Password:</label>
+            <input type="password" id="password" name="password" required>
 
-        <button type="submit" th:text=''>#{Login}</button>
-    </form>
+            <button type="submit" th:text="#{Login}">Login</button>
+        </form>
+
+        <div id="message"></div>
+    </div>
 </main>
 
 <script>
-    // Handle the form submission
     document.getElementById('loginForm').addEventListener('submit', function (event) {
-        event.preventDefault(); // Prevent form from submitting the traditional way
+        event.preventDefault();
 
-        // Collect form data
         const mail = document.getElementById('mail').value;
         const password = document.getElementById('password').value;
 
-        // Create request payload
         const requestData = {
             mail: mail,
             password: password
         };
 
-        // Send API request to login the user
         fetch('/api/public/login', {
             method: 'POST',
             headers: {
@@ -92,12 +142,13 @@
                 throw new Error('Could not retrieve redirect URL.');
             })
             .then(redirectUrl => {
-                console.log(redirectUrl)
+                console.log(redirectUrl);
                 window.location.href = redirectUrl;
             })
             .catch(error => {
                 console.error('Error:', error);
                 alert('Login failed. Please check your email and password.');
+                document.getElementById('message').innerText = 'Login failed. Please check your email and password.'; // Hiển thị thông báo lỗi
             });
     });
 </script>

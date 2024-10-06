@@ -8,6 +8,20 @@
 
     <style>
 
+        button {
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
 
         html, body {
             height: 100%;
@@ -129,14 +143,13 @@
 <main>
 
 
-    <h1>Welcome to Admin Dashboard!</h1>
-    <h2>Manage List of Accounts</h2>
+    <h2 th:text="#{Manage_List_of_Account}">Manage List of Accounts</h2>
 
     <div id="toolbar">
         <input type="text" id="searchInput" placeholder="Search accounts..."/>
-        <button id="searchButton">Search</button>
-        <button id="createButton">Create New</button>
-        <button id="reloadButton">Reload</button>
+        <button id="searchButton" th:text="#{Search}">Search</button>
+        <button id="createButton" th:text="#{Create_New}">Create New</button>
+        <button id="reloadButton" th:text="#{Reload}">Reload</button>
     </div>
 
     <div id="scoreModal" class="modal">
@@ -302,7 +315,6 @@
         };
 
         const createAccountForm = document.getElementById('createAccountForm');
-
 
 
         createAccountForm.onsubmit = async (event) => {
@@ -497,7 +509,7 @@
     function startEdit(id) {
         const row = document.querySelector(`tr[data-id='${id}']`);
 
-        const editableFields = ['name', 'mail', 'gender', 'birthday', 'phoneNumber', 'level', 'departmentId','note','salary'];
+        const editableFields = ['name', 'mail', 'gender', 'birthday', 'phoneNumber', 'level', 'departmentId', 'note', 'salary'];
 
         editableFields.forEach(field => {
             const span = row.querySelector(`span[data-field="${field}"]`);
@@ -610,16 +622,15 @@
 
             let goodScore = 0;
             let badScore = 0;
-            scores.forEach(score=>{
-                if(score.type){
+            scores.forEach(score => {
+                if (score.type) {
                     goodScore++;
-                }
-                else badScore++;
+                } else badScore++;
             })
 
 
             const inforAccount = document.getElementById('inforAccount');
-            inforAccount.textContent = name.textContent +"/"+ code.textContent + " : " + goodScore +"(good) - "+ badScore + "(bad) = " + (goodScore-badScore) +"(score)" ;
+            inforAccount.textContent = name.textContent + "/" + code.textContent + " : " + goodScore + "(good) - " + badScore + "(bad) = " + (goodScore - badScore) + "(score)";
 
             const scoreDetails = document.getElementById('scoreDetails');
 

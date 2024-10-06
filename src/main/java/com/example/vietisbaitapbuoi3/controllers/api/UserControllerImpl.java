@@ -51,12 +51,12 @@ public class UserControllerImpl implements UserController {
         }
     }
 
-    public ResponseEntity<Account> changePassword(@AuthenticationPrincipal Account user, @RequestBody ChangePasswordDTO changePasswordDTO) {
+    @Override
+    public ResponseEntity<Account> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO, @AuthenticationPrincipal Account user) {
         return accountService.changePassword(user, changePasswordDTO);
     }
 
     @Override
-
     public ResponseEntity<List<Account>> getAccountsByDepartmentCode(@RequestParam String code) {
         return accountService.getAllAccountsByDepartment(code);
     }

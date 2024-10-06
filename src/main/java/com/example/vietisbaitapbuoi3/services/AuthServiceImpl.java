@@ -53,8 +53,9 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.ROLE_EMPLOYEE)
                 .build();
 
-        accountRepository.save(user);
-
+        Account account = accountRepository.save(user);
+        account.setCode("STAFF-"+account.getId());
+        accountRepository.save(account);
         String jwt = jwtService.generateToken(user);
 
         return AuthenticationResponse.builder().token(jwt).build();

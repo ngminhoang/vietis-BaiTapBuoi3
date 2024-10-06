@@ -24,8 +24,8 @@ public interface UserController {
     ResponseEntity<Account> uploadImg(@AuthenticationPrincipal Account user,
                                              @RequestParam("file") MultipartFile file);
 
-    @PostMapping("/employee/change_password")
-    ResponseEntity<Account> changePassword(@AuthenticationPrincipal Account user, @RequestBody ChangePasswordDTO changePasswordDTO);
+    @PostMapping("/employee/test")
+    ResponseEntity<Account> changePassword(@RequestBody ChangePasswordDTO changePasswordDTO, @AuthenticationPrincipal Account user);
 
 
     @GetMapping("/admin/accounts/by-department")

@@ -10,11 +10,11 @@
     <h1>VIETIS CREDIT WEBSITE</h1>
 
     <nav style="display: flex; gap: 10px;">
-        <button onclick="location.href='/'">Home</button>
-        <button onclick="location.href='/employee/dashboard'">Information</button>
-        <button onclick="location.href='/employee/employee_score'">Employee</button>
-        <button onclick="location.href='/employee/department_score'">Department</button>
-        <button onclick="logout()">Logout</button>
+        <button onclick="location.href='/'" th:text="#{Home}">Home</button>
+        <button onclick="location.href='/employee/dashboard'" th:text="#{Information}">Information</button>
+        <button onclick="location.href='/employee/employee_score'" th:text="#{Employee}">Employee</button>
+        <button onclick="location.href='/employee/department_score'" th:text="#{Department}">Department</button>
+        <button onclick="logout()" th:text="#{Logout}">Logout</button>
     </nav>
 </header>
 
