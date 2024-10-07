@@ -68,7 +68,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public ResponseEntity<Account> getAccountById(@PathVariable Long id) {
-        return accountService.getAllAccountsById(id);
+        return accountService.getAccountsById(id);
     }
 
     @Override

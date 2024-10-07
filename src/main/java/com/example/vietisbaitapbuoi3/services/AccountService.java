@@ -12,7 +12,7 @@ public interface AccountService {
     ResponseEntity<List<Account>> getAllAccounts();
     ResponseEntity<List<Account>> getAllAccountsByName(String name);
     ResponseEntity<List<Account>> getAllAccountsByDepartment(String code);
-    ResponseEntity<Account> getAllAccountsById(Long id);
+    ResponseEntity<Account> getAccountsById(Long id);
     ResponseEntity<Account> createAccount(Account ingredients);
     ResponseEntity<Account> delete(Long id);
     ResponseEntity<Account> update(Account account);

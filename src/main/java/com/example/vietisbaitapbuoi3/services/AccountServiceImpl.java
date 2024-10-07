@@ -41,8 +41,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public ResponseEntity<Account> getAllAccountsById(Long id) {
-        return ResponseEntity.ok( accountRepository.findById(id).get());
+    public ResponseEntity<Account> getAccountsById(Long id) {
+        Optional<Account> result = accountRepository.findById(id);
+        if(result!=null) {
+            return ResponseEntity.ok( result.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @Override
@@ -57,9 +61,14 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public ResponseEntity<Account> delete(Long id) {
         Optional<Account> account = accountRepository.findById(id);
-        if(account.isPresent()) {
-            accountRepository.delete(account.get());
-            return ResponseEntity.ok(account.get());
+        try {
+            if(account.isPresent()) {
+                accountRepository.delete(account.get());
+                return ResponseEntity.ok(account.get());
+            }
+        }
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
         }
         return null;
     }

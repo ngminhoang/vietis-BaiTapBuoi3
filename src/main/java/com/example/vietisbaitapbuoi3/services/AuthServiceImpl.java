@@ -26,13 +26,12 @@ public class AuthServiceImpl implements AuthService {
 
     public AuthenticationResponse login(AuthenticationRequest request) {
         Optional<Account> optionalUser = accountRepository.findByMail(request.getMail());
-        if (!optionalUser.isPresent()) {
-            return null;
-        }
-        Account user = optionalUser.get();
-        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            String jwt = jwtService.generateToken(user);
-            return AuthenticationResponse.builder().token(jwt).build();
+        if (optionalUser!=null) {
+            Account user = optionalUser.get();
+            if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                String jwt = jwtService.generateToken(user);
+                return AuthenticationResponse.builder().token(jwt).build();
+            }
         }
         return null;
     }
@@ -40,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     public AuthenticationResponse register(Register request) {
         Optional<Account> existingUser = accountRepository.findByMail(request.getMail());
         if (existingUser.isPresent()) {
-            throw new IllegalArgumentException("Email already in use.");
+            return null;
         }
         String encryptedPassword = passwordEncoder.encode(request.getPassword());
 
