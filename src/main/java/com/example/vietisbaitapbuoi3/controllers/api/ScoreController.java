@@ -14,9 +14,6 @@ import java.util.List;
 @RequestMapping("/api/user")
 public interface ScoreController {
 
-//    @GetMapping("/score/list")
-//    ResponseEntity<List<Score>> getAllScoreByAccount(@AuthenticationPrincipal Account user);
-
     @GetMapping("/score/list")
     ResponseEntity<List<Score>> getAllScoreByAccountId(@RequestParam Long id, Integer month, Integer year);
 

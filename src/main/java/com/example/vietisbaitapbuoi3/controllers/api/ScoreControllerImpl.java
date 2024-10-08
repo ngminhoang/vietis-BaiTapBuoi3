@@ -19,11 +19,6 @@ public class ScoreControllerImpl implements ScoreController {
     @Autowired
     private ScoreService scoreService;
 
-//    @Override
-//    public ResponseEntity<List<Score>> getAllScoreByAccount(@AuthenticationPrincipal Account user) {
-//        return scoreService.getAllScoreByAccount(user);
-//    }
-
     @Override
     public ResponseEntity<List<Score>> getAllScoreByAccountId(Long id, Integer month, Integer year) {
         return scoreService.getAllScoreByAccountId(id, month, year);

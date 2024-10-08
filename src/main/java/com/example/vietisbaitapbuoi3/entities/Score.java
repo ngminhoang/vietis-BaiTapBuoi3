@@ -37,7 +37,11 @@ public class Score {
         this.type = scoreRequestDTO.getType();
         this.reason = scoreRequestDTO.getReason();
         this.id = scoreRequestDTO.getId();
-        this.account = UserUtil.getAccountById(scoreRequestDTO.getAccountId());
+        try{
+            this.account = UserUtil.getAccountById(scoreRequestDTO.getAccountId());
+
+        }
+        catch (Exception e){}
     }
 }
 

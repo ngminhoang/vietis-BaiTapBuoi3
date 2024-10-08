@@ -70,7 +70,7 @@ public class AuthServiceTest {
     @Test
     public void testLogin_Failure_NotFoundEmail() {
         AuthenticationRequest request = new AuthenticationRequest(account.getMail(), account.getPassword());
-        when(accountRepository.findByMail(anyString())).thenReturn(null);
+        when(accountRepository.findByMail(anyString())).thenReturn(Optional.empty());
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
         when(jwtService.generateToken(account)).thenReturn("token");
         AuthenticationResponse response = authService.login(request);

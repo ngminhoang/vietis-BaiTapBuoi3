@@ -16,59 +16,82 @@ import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
+
     @Autowired
     private AccountRepository accountRepository;
+
     @Autowired
     private JwtService jwtService;
+
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-
+    @Override
     public AuthenticationResponse login(AuthenticationRequest request) {
-        Optional<Account> optionalUser = accountRepository.findByMail(request.getMail());
-        if (optionalUser!=null) {
-            Account user = optionalUser.get();
-            if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-                String jwt = jwtService.generateToken(user);
-                return AuthenticationResponse.builder().token(jwt).build();
+        try {
+            Optional<Account> optionalUser = accountRepository.findByMail(request.getMail());
+            if (optionalUser.isPresent()) {
+                Account user = optionalUser.get();
+                if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+                    String jwt = jwtService.generateToken(user);
+                    return AuthenticationResponse.builder().token(jwt).build();
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return AuthenticationResponse.builder().token(null).build();
+    }
+
+    @Override
+    public AuthenticationResponse register(Register request) {
+        try {
+            if (accountRepository.findByMail(request.getMail()).isPresent()) {
+                return null;
+            }
+
+            String encryptedPassword = passwordEncoder.encode(request.getPassword());
+
+            Account user = Account.builder()
+                    .gender(request.getGender())
+                    .birthday(request.getBirthday())
+                    .name(request.getName())
+                    .mail(request.getMail())
+                    .password(encryptedPassword)
+                    .role(Role.ROLE_EMPLOYEE)
+                    .build();
+
+            Account savedAccount = accountRepository.save(user);
+            savedAccount.setCode("STAFF-" + savedAccount.getId());
+            accountRepository.save(savedAccount);
+
+            String jwt = jwtService.generateToken(savedAccount);
+
+            return AuthenticationResponse.builder().token(jwt).build();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
-    public AuthenticationResponse register(Register request) {
-        Optional<Account> existingUser = accountRepository.findByMail(request.getMail());
-        if (existingUser.isPresent()) {
-            return null;
-        }
-        String encryptedPassword = passwordEncoder.encode(request.getPassword());
-
-        Account user = Account.builder()
-                .gender(request.getGender())
-                .birthday(request.getBirthday())
-                .name(request.getName())
-                .mail(request.getMail())
-                .password(encryptedPassword)
-                .role(Role.ROLE_EMPLOYEE)
-                .build();
-
-        Account account = accountRepository.save(user);
-        account.setCode("STAFF-"+account.getId());
-        accountRepository.save(account);
-        String jwt = jwtService.generateToken(user);
-
-        return AuthenticationResponse.builder().token(jwt).build();
-    }
-
     @Override
     public ResponseEntity<Boolean> authenAdmin(Account account) {
-        Optional<Account> existingUser = accountRepository.findById(account.getId());
-        return existingUser.isPresent() && existingUser.get().getRole().equals(Role.ROLE_ADMIN)? ResponseEntity.ok(true): ResponseEntity.ok(false);
-    }
-    @Override
-    public ResponseEntity<Boolean> authenEmployee(Account account) {
-        Optional<Account> existingUser = accountRepository.findById(account.getId());
-        return existingUser.isPresent() && existingUser.get().getRole().equals(Role.ROLE_EMPLOYEE)? ResponseEntity.ok(true): ResponseEntity.ok(false);
+        return authenRole(account, Role.ROLE_ADMIN);
     }
 
+    @Override
+    public ResponseEntity<Boolean> authenEmployee(Account account) {
+        return authenRole(account, Role.ROLE_EMPLOYEE);
+    }
+
+    private ResponseEntity<Boolean> authenRole(Account account, Role role) {
+        try {
+            Optional<Account> existingUser = accountRepository.findById(account.getId());
+            boolean isAuthorized = existingUser.isPresent() && existingUser.get().getRole().equals(role);
+            return ResponseEntity.ok(isAuthorized);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.ok(false);
+        }
+    }
 }

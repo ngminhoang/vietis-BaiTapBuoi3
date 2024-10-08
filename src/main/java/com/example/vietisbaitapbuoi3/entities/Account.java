@@ -88,7 +88,10 @@ public class Account implements UserDetails {
         this.mail = accountDTO.getMail();
         this.phoneNumber = accountDTO.getPhoneNumber();
         this.note = accountDTO.getNote();
-        this.department = UserUtil.getDepartmentById(accountDTO.getDepartmentId());
+        try{
+            this.department = UserUtil.getDepartmentById(accountDTO.getDepartmentId());
+        }
+        catch (Exception e){}
     }
 
     @Override

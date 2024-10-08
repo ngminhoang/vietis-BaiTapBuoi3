@@ -36,19 +36,7 @@ public class UserControllerImpl implements UserController {
     @PostMapping("/employee/upload_img")
     public ResponseEntity<Account> uploadImg(@AuthenticationPrincipal Account user,
                                              @RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        try {
-            String fileName = FileUtil.saveImageFile(user, file);
-            user.setImgPath("/uploads/" + fileName);
-            return accountService.update(user);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).build();
-        }
+            return accountService.uploadImg(user, file);
     }
 
     @Override
