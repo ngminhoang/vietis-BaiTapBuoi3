@@ -1,12 +1,13 @@
 package com.example.vietisbaitapbuoi3.services;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.Score;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
-import com.example.vietisbaitapbuoi3.entities.dto.DepartmentScoreCountDTO;
-import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
-import com.example.vietisbaitapbuoi3.repositories.DepartmentRepository;
-import com.example.vietisbaitapbuoi3.repositories.ScoreRepository;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.Score;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountScoreCountDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.DepartmentScoreCountDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.ScoreResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.repositories.AccountRepository;
+import com.example.vietisbaitapbuoi3.DAO.repositories.DepartmentRepository;
+import com.example.vietisbaitapbuoi3.DAO.repositories.ScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -27,13 +28,13 @@ public class ScoreServiceImpl implements ScoreService {
     private DepartmentRepository departmentRepository;
 
     @Override
-    public ResponseEntity<List<Score>> getAllScoreByAccount(Account account) {
+    public ResponseEntity<List<ScoreResponseDTO>> getAllScoreByAccount(Account account) {
         try {
             List<Score> scores = scoreRepository.getScoreByAccount(account);
             if (scores.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.ok(scores);
+            return ResponseEntity.ok(scores.stream().map(ScoreResponseDTO::new).toList());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
@@ -41,14 +42,14 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public ResponseEntity<Score> createScore(Score score) {
+    public ResponseEntity<ScoreResponseDTO> createScore(Score score) {
         try {
             score.setDate(LocalDate.now());
             Score savedScore = scoreRepository.save(score);
             if (savedScore == null) {
                 return ResponseEntity.badRequest().build();
             }
-            return ResponseEntity.ok(savedScore);
+            return ResponseEntity.ok(new ScoreResponseDTO(savedScore));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
@@ -56,13 +57,13 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public ResponseEntity<List<Score>> getAllScoreByAccountId(Long id, Integer month, Integer year) {
+    public ResponseEntity<List<ScoreResponseDTO>> getAllScoreByAccountId(Long id, Integer month, Integer year) {
         try {
             List<Score> scores = scoreRepository.findScoresByAccountIdAndMonthAndYear(id, month, year);
             if (scores.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.ok(scores);
+            return ResponseEntity.ok(scores.stream().map(ScoreResponseDTO::new).toList());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
@@ -70,13 +71,13 @@ public class ScoreServiceImpl implements ScoreService {
     }
 
     @Override
-    public ResponseEntity<List<Score>> getAllScoreByDepartmentId(Long id, Integer month, Integer year) {
+    public ResponseEntity<List<ScoreResponseDTO>> getAllScoreByDepartmentId(Long id, Integer month, Integer year) {
         try {
             List<Score> scores = scoreRepository.findScoresByDepartmentIdAndMonthAndYear(id, month, year);
             if (scores.isEmpty()) {
                 return ResponseEntity.notFound().build();
             }
-            return ResponseEntity.ok(scores);
+            return ResponseEntity.ok(scores.stream().map(ScoreResponseDTO::new).toList());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();

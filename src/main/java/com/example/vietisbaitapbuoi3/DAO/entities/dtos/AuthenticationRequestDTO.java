@@ -1,4 +1,4 @@
-package com.example.vietisbaitapbuoi3.authentication;
+package com.example.vietisbaitapbuoi3.DAO.entities.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticationRequest {
+public class AuthenticationRequestDTO {
     public String mail;
     public String password;
 }

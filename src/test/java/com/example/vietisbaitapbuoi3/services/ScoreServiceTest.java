@@ -1,12 +1,13 @@
 package com.example.vietisbaitapbuoi3.services;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.Score;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
-import com.example.vietisbaitapbuoi3.entities.dto.DepartmentScoreCountDTO;
-import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
-import com.example.vietisbaitapbuoi3.repositories.DepartmentRepository;
-import com.example.vietisbaitapbuoi3.repositories.ScoreRepository;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.Score;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountScoreCountDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.DepartmentScoreCountDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.ScoreResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.repositories.AccountRepository;
+import com.example.vietisbaitapbuoi3.DAO.repositories.DepartmentRepository;
+import com.example.vietisbaitapbuoi3.DAO.repositories.ScoreRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -51,7 +52,7 @@ public class ScoreServiceTest {
     public void testGetAllScoreByAccount_Success() {
         when(scoreRepository.getScoreByAccount(any(Account.class))).thenReturn(List.of(score));
 
-        ResponseEntity<List<Score>> response = scoreService.getAllScoreByAccount(account);
+        ResponseEntity<List<ScoreResponseDTO>> response = scoreService.getAllScoreByAccount(account);
 
         assertNotNull(response);
         assertFalse(response.getBody().isEmpty());
@@ -62,7 +63,7 @@ public class ScoreServiceTest {
     public void testCreateScore_Success() {
         when(scoreRepository.save(any(Score.class))).thenReturn(score);
 
-        ResponseEntity<Score> response = scoreService.createScore(score);
+        ResponseEntity<ScoreResponseDTO> response = scoreService.createScore(score);
 
         assertNotNull(response);
         assertEquals(score, response.getBody());
@@ -73,7 +74,7 @@ public class ScoreServiceTest {
     public void testGetAllScoreByAccountId_Success() {
         when(scoreRepository.findScoresByAccountIdAndMonthAndYear(anyLong(), anyInt(), anyInt())).thenReturn(List.of(score));
 
-        ResponseEntity<List<Score>> response = scoreService.getAllScoreByAccountId(1L, 10, 2024);
+        ResponseEntity<List<ScoreResponseDTO>> response = scoreService.getAllScoreByAccountId(1L, 10, 2024);
 
         assertNotNull(response);
         assertFalse(response.getBody().isEmpty());
@@ -84,7 +85,7 @@ public class ScoreServiceTest {
     public void testGetAllScoreByDepartmentId_Success() {
         when(scoreRepository.findScoresByDepartmentIdAndMonthAndYear(anyLong(), anyInt(), anyInt())).thenReturn(List.of(score));
 
-        ResponseEntity<List<Score>> response = scoreService.getAllScoreByDepartmentId(1L, 10, 2024);
+        ResponseEntity<List<ScoreResponseDTO>> response = scoreService.getAllScoreByDepartmentId(1L, 10, 2024);
 
         assertNotNull(response);
         assertFalse(response.getBody().isEmpty());

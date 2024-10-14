@@ -1,24 +1,22 @@
 package com.example.vietisbaitapbuoi3.controllers;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.Department;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountInforDTO;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
-import com.example.vietisbaitapbuoi3.entities.enums.Role;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.Department;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.DepartmentResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Role;
 import com.example.vietisbaitapbuoi3.services.AccountService;
 import com.example.vietisbaitapbuoi3.services.DepartmentService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -63,7 +61,7 @@ public class PublicControllerTest {
 
     @Test
     void testGetAllAccounts() throws Exception {
-        List<Account> accounts = Arrays.asList(account);
+        List<AccountResponseDTO> accounts = Arrays.asList(new AccountResponseDTO(account));
         when(accountService.getAllAccounts()).thenReturn(ResponseEntity.ok(accounts));
 
         mockMvc.perform(get("/api/public/get_all"))
@@ -74,7 +72,7 @@ public class PublicControllerTest {
 
     @Test
     void testGetAllDepartment() throws Exception {
-        List<Department> departments = Arrays.asList(new Department(), new Department());
+        List<DepartmentResponseDTO> departments = Arrays.asList(new DepartmentResponseDTO(new Department()));
         when(departmentService.getAllDepartment()).thenReturn(ResponseEntity.ok(departments));
 
         mockMvc.perform(get("/api/public/department/get_all"))

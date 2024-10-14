@@ -1,8 +1,5 @@
-package com.example.vietisbaitapbuoi3.entities.dto;
+package com.example.vietisbaitapbuoi3.DAO.entities.dtos;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.Data;
 
 import java.time.LocalDate;

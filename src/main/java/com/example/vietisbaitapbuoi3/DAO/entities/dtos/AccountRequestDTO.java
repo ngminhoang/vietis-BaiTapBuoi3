@@ -1,7 +1,7 @@
-package com.example.vietisbaitapbuoi3.entities.dto;
+package com.example.vietisbaitapbuoi3.DAO.entities.dtos;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

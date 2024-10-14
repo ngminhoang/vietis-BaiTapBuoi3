@@ -1,6 +1,6 @@
-package com.example.vietisbaitapbuoi3.entities;
+package com.example.vietisbaitapbuoi3.DAO.entities;
 
-import com.example.vietisbaitapbuoi3.entities.dto.ScoreRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.ScoreRequestDTO;
 import com.example.vietisbaitapbuoi3.utils.UserUtil;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

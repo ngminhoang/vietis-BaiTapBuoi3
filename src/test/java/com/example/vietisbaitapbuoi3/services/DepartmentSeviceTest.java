@@ -1,22 +1,19 @@
 package com.example.vietisbaitapbuoi3.services;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.Department;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
-import com.example.vietisbaitapbuoi3.entities.enums.Role;
-import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
-import com.example.vietisbaitapbuoi3.repositories.DepartmentRepository;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.Department;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.DepartmentResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.repositories.AccountRepository;
+import com.example.vietisbaitapbuoi3.DAO.repositories.DepartmentRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
-import java.lang.reflect.Field;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -49,8 +46,8 @@ public class DepartmentSeviceTest {
 
     @Test
     public void testGetAllDepartment() {
-        when(accountRepository.findAll()).thenReturn(List.of(new Account()));
-        ResponseEntity<List<Department>> result = departmentService.getAllDepartment();
+        when(accountRepository.findAll()).thenReturn(List.of());
+        ResponseEntity<List<DepartmentResponseDTO>> result = departmentService.getAllDepartment();
         assertNotNull(result);
     }
 
@@ -66,7 +63,7 @@ public class DepartmentSeviceTest {
 
         when(departmentRepository.save(department)).thenReturn(department);
 
-        ResponseEntity<Department> result = departmentService.createDepartment(department);
+        ResponseEntity<DepartmentResponseDTO> result = departmentService.createDepartment(department);
 
         assertNotNull(result);
         verify(departmentRepository, times(2)).save(department);
@@ -76,7 +73,7 @@ public class DepartmentSeviceTest {
     public void testCreateDepartment_Failure() {
         when(departmentRepository.save(department)).thenThrow(new IllegalArgumentException("Invalid department data"));
 
-        ResponseEntity<Department> result = null;
+        ResponseEntity<DepartmentResponseDTO> result = null;
         try {
             result = departmentService.createDepartment(department);
         } catch (Exception e) {
@@ -94,7 +91,7 @@ public class DepartmentSeviceTest {
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(department));
         when(departmentRepository.save(any(Department.class))).thenReturn(department);
 
-        ResponseEntity<Department> result = departmentService.updateDepartment(department);
+        ResponseEntity<DepartmentResponseDTO> result = departmentService.updateDepartment(department);
 
         assertNotNull(result);
         verify(departmentRepository, times(1)).findById(anyLong());
@@ -108,7 +105,7 @@ public class DepartmentSeviceTest {
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.empty());
         when(departmentRepository.save(any(Department.class))).thenReturn(department);
 
-        ResponseEntity<Department> result = departmentService.updateDepartment(department);
+        ResponseEntity<DepartmentResponseDTO> result = departmentService.updateDepartment(department);
 
         assertNotNull(result);
         verify(departmentRepository, times(1)).findById(anyLong());
@@ -121,7 +118,7 @@ public class DepartmentSeviceTest {
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(department));
         when(departmentRepository.save(any(Department.class))).thenThrow(new IllegalArgumentException("Invalid department data"));
 
-        ResponseEntity<Department> result;
+        ResponseEntity<DepartmentResponseDTO> result;
         try {
             result = departmentService.updateDepartment(department);
         } catch (Exception e) {
@@ -136,7 +133,7 @@ public class DepartmentSeviceTest {
     public void testDeleteDepartment_Success() {
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.of(department));
 
-        ResponseEntity<Department> result = departmentService.deleteDepartment(department.getId());
+        ResponseEntity<DepartmentResponseDTO> result = departmentService.deleteDepartment(department.getId());
 
         assertNotNull(result);
         verify(departmentRepository, times(1)).findById(anyLong());
@@ -148,7 +145,7 @@ public class DepartmentSeviceTest {
     public void testDeleteDepartment_Failure() {
         when(departmentRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        ResponseEntity<Department> result = departmentService.deleteDepartment(department.getId());
+        ResponseEntity<DepartmentResponseDTO> result = departmentService.deleteDepartment(department.getId());
 
         assertNotNull(result);
         verify(departmentRepository, times(1)).findById(anyLong());

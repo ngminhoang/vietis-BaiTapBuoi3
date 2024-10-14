@@ -1,6 +1,6 @@
-package com.example.vietisbaitapbuoi3.entities.converters;
+package com.example.vietisbaitapbuoi3.DAO.entities.converters;
 
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 

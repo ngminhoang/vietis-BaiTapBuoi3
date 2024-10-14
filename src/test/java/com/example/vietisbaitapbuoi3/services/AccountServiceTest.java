@@ -1,11 +1,12 @@
 package com.example.vietisbaitapbuoi3.services;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountInforDTO;
-import com.example.vietisbaitapbuoi3.entities.dto.ChangePasswordDTO;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
-import com.example.vietisbaitapbuoi3.entities.enums.Role;
-import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountScoreCountInforDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.ChangePasswordDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Role;
+import com.example.vietisbaitapbuoi3.DAO.repositories.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -64,7 +65,7 @@ public class AccountServiceTest {
     public void testUpdate_Success(){
         when(accountRepository.findById(any(Long.class))).thenReturn( Optional.of(account));
         when(accountRepository.save(any(Account.class))).thenReturn(account);
-        ResponseEntity<Account>response = accountService.update(account);
+        ResponseEntity<AccountResponseDTO>response = accountService.update(account);
         assertNotNull(response);
         verify(accountRepository, times(1)).save(account);
     }
@@ -72,7 +73,7 @@ public class AccountServiceTest {
     @Test
     public void testUpdate_Failure_NotFound() {
         when(accountRepository.findById(any(Long.class))).thenReturn(Optional.empty());
-        ResponseEntity<Account> response = accountService.update(account);
+        ResponseEntity<AccountResponseDTO> response = accountService.update(account);
         assertNotNull(response);
         assertEquals(ResponseEntity.notFound().build().getStatusCode(), response.getStatusCode());
         verify(accountRepository, never()).save(any(Account.class));
@@ -81,7 +82,7 @@ public class AccountServiceTest {
     @Test
     public void testDelete_Success(){
         when(accountRepository.findById(any(Long.class))).thenReturn( Optional.of(account));
-        ResponseEntity<Account> response = accountService.delete(any(Long.class));
+        ResponseEntity<AccountResponseDTO> response = accountService.delete(any(Long.class));
         verify(accountRepository, times(1)).delete(account);
 
     }
@@ -89,7 +90,7 @@ public class AccountServiceTest {
     @Test
     public void testDelete_Failure(){
         when(accountRepository.findById(any(Long.class))).thenReturn(null);
-        ResponseEntity<Account> response = accountService.delete(any(Long.class));
+        ResponseEntity<AccountResponseDTO> response = accountService.delete(any(Long.class));
         verify(accountRepository,never()).delete(account);
     }
 
@@ -100,11 +101,10 @@ public class AccountServiceTest {
         result.setPassword("encodedPassword");
         when(passwordEncoder.encode(anyString())).thenReturn("encodedPassword");
         when(accountRepository.save(any(Account.class))).thenReturn(result);
-        ResponseEntity<Account> response = accountService.createAccount(result);
+        ResponseEntity<AccountResponseDTO> response = accountService.createAccount(result);
 
         assertNotNull(response);
         assertNotNull(response.getBody());
-        assertEquals("encodedPassword", response.getBody().getPassword());
         assertEquals(Role.ROLE_EMPLOYEE, response.getBody().getRole());
         verify(accountRepository, times(2)).save(any(Account.class));
     }
@@ -113,7 +113,7 @@ public class AccountServiceTest {
     public void testGetAccountsById_Success() {
         when(accountRepository.findById(1L)).thenReturn(Optional.of(account));
 
-        ResponseEntity<Account> response = accountService.getAccountsById(1L);
+        ResponseEntity<AccountResponseDTO> response = accountService.getAccountsById(1L);
 
         assertNotNull(response);
         assertEquals(account, response.getBody());
@@ -124,7 +124,7 @@ public class AccountServiceTest {
     public void testGetAccountsById_Failure() {
         when(accountRepository.findById(1L)).thenReturn(null);
 
-        ResponseEntity<Account> response = accountService.getAccountsById(1L);
+        ResponseEntity<AccountResponseDTO> response = accountService.getAccountsById(1L);
 
         assertNotNull(response);
         verify(accountRepository, times(1)).findById(1L);
@@ -141,7 +141,7 @@ public class AccountServiceTest {
         when(passwordEncoder.matches(changePasswordDTO.getOldPassword(), account.getPassword())).thenReturn(true);
         when(passwordEncoder.encode(changePasswordDTO.getNewPassword())).thenReturn("encodedNewPassword");
         when(accountRepository.save(account)).thenReturn(result);
-        ResponseEntity<Account> response = accountService.changePassword(account, changePasswordDTO);
+        ResponseEntity<AccountResponseDTO> response = accountService.changePassword(account, changePasswordDTO);
         assertNotNull(response);
         assertEquals("encodedNewPassword", account.getPassword());
         verify(accountRepository, times(1)).save(account);
@@ -156,7 +156,7 @@ public class AccountServiceTest {
 
         when(passwordEncoder.matches(changePasswordDTO.getOldPassword(), account.getPassword())).thenReturn(false);
 
-        ResponseEntity<Account> response = accountService.changePassword(account, changePasswordDTO);
+        ResponseEntity<AccountResponseDTO> response = accountService.changePassword(account, changePasswordDTO);
 
         assertEquals(ResponseEntity.notFound().build(), response);
         verify(accountRepository, never()).save(any(Account.class));
@@ -165,7 +165,7 @@ public class AccountServiceTest {
     @Test
     public void testGetAllAccounts() {
         when(accountRepository.findAll()).thenReturn(List.of());
-        ResponseEntity<List<Account>> response = accountService.getAllAccounts();
+        ResponseEntity<List<AccountResponseDTO>> response = accountService.getAllAccounts();
         assertNotNull(response);
         verify(accountRepository, times(1)).findAll();
     }
@@ -173,7 +173,7 @@ public class AccountServiceTest {
     @Test
     public void testGetAllAccountsByName() {
         when(accountRepository.findAccountByName(anyString())).thenReturn(List.of());
-        ResponseEntity<List<Account>> response = accountService.getAllAccounts();
+        ResponseEntity<List<AccountResponseDTO>> response = accountService.getAllAccounts();
         assertNotNull(response);
         verify(accountRepository, times(1)).findAccountByName(anyString());
     }
@@ -181,7 +181,7 @@ public class AccountServiceTest {
     @Test
     public void testGetAllAccountsByDepartment() {
         when(accountRepository.findAccountByDepartmentCode(anyString())).thenReturn(List.of());
-        ResponseEntity<List<Account>> response = accountService.getAllAccounts();
+        ResponseEntity<List<AccountResponseDTO>> response = accountService.getAllAccounts();
         assertNotNull(response);
         verify(accountRepository, times(1)).findAccountByDepartmentCode(anyString());
     }

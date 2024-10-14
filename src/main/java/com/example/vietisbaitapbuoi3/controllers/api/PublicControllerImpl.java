@@ -1,9 +1,9 @@
 package com.example.vietisbaitapbuoi3.controllers.api;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.Department;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountInforDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountScoreCountInforDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.DepartmentResponseDTO;
 import com.example.vietisbaitapbuoi3.services.AccountService;
 import com.example.vietisbaitapbuoi3.services.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +22,12 @@ public class PublicControllerImpl implements PublicController {
     DepartmentService departmentService;
 
     @Override
-    public ResponseEntity<List<Account>> getAllAccounts() {
+    public ResponseEntity<List<AccountResponseDTO>> getAllAccounts() {
         return accountService.getAllAccounts();
     }
 
     @Override
-    public ResponseEntity<List<Department>> getAllDepartment() {
+    public ResponseEntity<List<DepartmentResponseDTO>> getAllDepartment() {
         return departmentService.getAllDepartment();
     }
 

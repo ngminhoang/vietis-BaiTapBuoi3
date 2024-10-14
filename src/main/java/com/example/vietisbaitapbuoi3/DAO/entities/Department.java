@@ -1,4 +1,4 @@
-package com.example.vietisbaitapbuoi3.entities;
+package com.example.vietisbaitapbuoi3.DAO.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

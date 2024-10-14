@@ -1,21 +1,18 @@
 package com.example.vietisbaitapbuoi3.services;
 
-import com.example.vietisbaitapbuoi3.authentication.AuthenticationRequest;
-import com.example.vietisbaitapbuoi3.authentication.AuthenticationResponse;
-import com.example.vietisbaitapbuoi3.authentication.Register;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AuthenticationRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AuthenticationResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.RegisterDTO;
 import com.example.vietisbaitapbuoi3.configuration.JwtService;
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
-import com.example.vietisbaitapbuoi3.entities.enums.Role;
-import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
-import org.aspectj.lang.annotation.Before;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Role;
+import com.example.vietisbaitapbuoi3.DAO.repositories.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestTemplate;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -57,11 +54,11 @@ public class AuthServiceTest {
 
     @Test
     public void testLogin_Success() {
-        AuthenticationRequest request = new AuthenticationRequest(account.getMail(), account.getPassword());
+        AuthenticationRequestDTO request = new AuthenticationRequestDTO(account.getMail(), account.getPassword());
         when(accountRepository.findByMail(anyString())).thenReturn(Optional.of(account));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
         when(jwtService.generateToken(account)).thenReturn("token");
-        AuthenticationResponse response = authService.login(request);
+        AuthenticationResponseDTO response = authService.login(request);
         assertNotNull(response);
         assertEquals("token", response.getToken());
         verify(jwtService, times(1)).generateToken(account);
@@ -69,22 +66,22 @@ public class AuthServiceTest {
 
     @Test
     public void testLogin_Failure_NotFoundEmail() {
-        AuthenticationRequest request = new AuthenticationRequest(account.getMail(), account.getPassword());
+        AuthenticationRequestDTO request = new AuthenticationRequestDTO(account.getMail(), account.getPassword());
         when(accountRepository.findByMail(anyString())).thenReturn(Optional.empty());
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
         when(jwtService.generateToken(account)).thenReturn("token");
-        AuthenticationResponse response = authService.login(request);
+        AuthenticationResponseDTO response = authService.login(request);
         assertNull(response);
         verify(jwtService, never()).generateToken(account);
     }
 
     @Test
     public void testLogin_Failure_ErrorPassword() {
-        AuthenticationRequest request = new AuthenticationRequest(account.getMail(), account.getPassword());
+        AuthenticationRequestDTO request = new AuthenticationRequestDTO(account.getMail(), account.getPassword());
         when(accountRepository.findByMail(anyString())).thenReturn(Optional.of(account));
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
         when(jwtService.generateToken(account)).thenReturn("token");
-        AuthenticationResponse response = authService.login(request);
+        AuthenticationResponseDTO response = authService.login(request);
         assertNull(response);
         verify(jwtService, never()).generateToken(account);
     }
@@ -92,13 +89,13 @@ public class AuthServiceTest {
 
     @Test
     public void testRegister_Success() {
-        Register request = new Register(account);
+        RegisterDTO request = new RegisterDTO(account);
         when(accountRepository.findByMail(anyString())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(request.getPassword())).thenReturn(account.getPassword());
         when(accountRepository.save(any(Account.class))).thenReturn(account);
         when(jwtService.generateToken(any(Account.class))).thenReturn("token");
 
-        AuthenticationResponse response = authService.register(request);
+        AuthenticationResponseDTO response = authService.register(request);
 
         assertNotNull(response);
         assertEquals("token", response.getToken());
@@ -109,13 +106,13 @@ public class AuthServiceTest {
 
     @Test
     public void testRegister_Failure_MailExisted() {
-        Register request = new Register(account);
+        RegisterDTO request = new RegisterDTO(account);
         when(accountRepository.findByMail(anyString())).thenReturn(Optional.of(account));
         when(passwordEncoder.encode(request.getPassword())).thenReturn(account.getPassword());
         when(accountRepository.save(any(Account.class))).thenReturn(account);
         when(jwtService.generateToken(any(Account.class))).thenReturn("token");
 
-        AuthenticationResponse response = authService.register(request);
+        AuthenticationResponseDTO response = authService.register(request);
 
         assertNull(response);
         verify(accountRepository, times(1)).findByMail(request.getMail());

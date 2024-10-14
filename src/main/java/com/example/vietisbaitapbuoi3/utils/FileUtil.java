@@ -1,6 +1,6 @@
 package com.example.vietisbaitapbuoi3.utils;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;

@@ -1,6 +1,5 @@
-package com.example.vietisbaitapbuoi3.entities.enums;
+package com.example.vietisbaitapbuoi3.DAO.entities.enums;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 

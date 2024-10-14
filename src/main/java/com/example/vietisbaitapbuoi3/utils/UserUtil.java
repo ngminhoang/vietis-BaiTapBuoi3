@@ -1,11 +1,10 @@
 package com.example.vietisbaitapbuoi3.utils;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.Department;
-import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
-import com.example.vietisbaitapbuoi3.repositories.DepartmentRepository;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.Department;
+import com.example.vietisbaitapbuoi3.DAO.repositories.AccountRepository;
+import com.example.vietisbaitapbuoi3.DAO.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service

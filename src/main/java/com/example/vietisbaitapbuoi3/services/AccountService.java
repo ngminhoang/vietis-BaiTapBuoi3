@@ -1,27 +1,44 @@
 package com.example.vietisbaitapbuoi3.services;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountInforDTO;
-import com.example.vietisbaitapbuoi3.entities.dto.ChangePasswordDTO;
-import com.example.vietisbaitapbuoi3.utils.FileUtil;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountScoreCountInforDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.ChangePasswordDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface AccountService {
-    ResponseEntity<List<Account>> getAllAccounts();
-    ResponseEntity<List<Account>> getAllAccountsByName(String name);
-    ResponseEntity<List<Account>> getAllAccountsByDepartment(String code);
-    ResponseEntity<Account> getAccountsById(Long id);
-    ResponseEntity<Account> createAccount(Account ingredients);
-    ResponseEntity<Account> delete(Long id);
-    ResponseEntity<Account> update(Account account);
+
+    // Lấy tất cả tài khoản
+    ResponseEntity<List<AccountResponseDTO>> getAllAccounts();
+
+    // Lấy danh sách tài khoản theo tên
+    ResponseEntity<List<AccountResponseDTO>> getAllAccountsByName(String name);
+
+    // Lấy danh sách tài khoản theo phòng ban
+    ResponseEntity<List<AccountResponseDTO>> getAllAccountsByDepartment(String code);
+
+    // Lấy thông tin tài khoản theo ID
+    ResponseEntity<AccountResponseDTO> getAccountsById(Long id);
+
+    // Tạo mới tài khoản
+    ResponseEntity<AccountResponseDTO> createAccount(Account account);
+
+    // Xóa tài khoản theo ID
+    ResponseEntity<AccountResponseDTO> delete(Long id);
+
+    // Cập nhật thông tin tài khoản
+    ResponseEntity<AccountResponseDTO> update(Account account);
+
+    // Lấy danh sách tài khoản có điểm số cao nhất
     ResponseEntity<List<AccountScoreCountInforDTO>> getTopAccount();
-    ResponseEntity<Account> changePassword(Account user, ChangePasswordDTO changePasswordDTO);
-    ResponseEntity<Account> uploadImg(Account user,MultipartFile file);
+
+    // Đổi mật khẩu tài khoản
+    ResponseEntity<AccountResponseDTO> changePassword(Account account, ChangePasswordDTO changePasswordDTO);
+
+    // Tải lên ảnh đại diện cho tài khoản
+    ResponseEntity<AccountResponseDTO> uploadImg(Account account, MultipartFile file);
 }

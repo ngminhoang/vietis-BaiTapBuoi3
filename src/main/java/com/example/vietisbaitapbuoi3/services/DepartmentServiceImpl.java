@@ -1,9 +1,10 @@
 package com.example.vietisbaitapbuoi3.services;
 
-import com.example.vietisbaitapbuoi3.entities.Department;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
-import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
-import com.example.vietisbaitapbuoi3.repositories.DepartmentRepository;
+import com.example.vietisbaitapbuoi3.DAO.entities.Department;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.DepartmentResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.repositories.AccountRepository;
+import com.example.vietisbaitapbuoi3.DAO.repositories.DepartmentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     AccountRepository accountRepository;
 
     @Override
-    public ResponseEntity<List<Department>> getAllDepartment() {
+    public ResponseEntity<List<DepartmentResponseDTO>> getAllDepartment() {
         try {
-            return ResponseEntity.ok(departmentRepository.findAll());
+            return ResponseEntity.ok(departmentRepository.findAll().stream().map(DepartmentResponseDTO::new).toList());
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
@@ -42,11 +43,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public ResponseEntity<Department> createDepartment(Department department) {
+    public ResponseEntity<DepartmentResponseDTO> createDepartment(Department department) {
         try {
             Department savedDepartment = departmentRepository.save(department);
             savedDepartment.setCode("DEP-" + savedDepartment.getId().toString());
-            return ResponseEntity.ok(departmentRepository.save(savedDepartment));
+            return ResponseEntity.ok(new DepartmentResponseDTO(departmentRepository.save(savedDepartment)));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).build();
@@ -54,7 +55,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public ResponseEntity<Department> updateDepartment(Department department) {
+    public ResponseEntity<DepartmentResponseDTO> updateDepartment(Department department) {
         try {
             Optional<Department> originDepartmentOpt = departmentRepository.findById(department.getId());
 
@@ -76,7 +77,7 @@ public class DepartmentServiceImpl implements DepartmentService {
                     }
                 }
 
-                return ResponseEntity.ok(departmentRepository.save(originDepartment));
+                return ResponseEntity.ok(new DepartmentResponseDTO(departmentRepository.save(originDepartment)));
             }
 
             return ResponseEntity.notFound().build();
@@ -87,7 +88,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public ResponseEntity<Department> deleteDepartment(Long id) {
+    public ResponseEntity<DepartmentResponseDTO> deleteDepartment(Long id) {
         try {
             Optional<Department> departmentOptional = departmentRepository.findById(id);
 

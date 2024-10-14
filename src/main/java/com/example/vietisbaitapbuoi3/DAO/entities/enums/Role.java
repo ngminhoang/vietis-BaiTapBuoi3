@@ -1,4 +1,4 @@
-package com.example.vietisbaitapbuoi3.entities.enums;
+package com.example.vietisbaitapbuoi3.DAO.entities.enums;
 
 public enum Role {
     ROLE_ADMIN(1),

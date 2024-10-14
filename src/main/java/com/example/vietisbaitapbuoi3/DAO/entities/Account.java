@@ -1,10 +1,10 @@
-package com.example.vietisbaitapbuoi3.entities;
+package com.example.vietisbaitapbuoi3.DAO.entities;
 
-import com.example.vietisbaitapbuoi3.entities.converters.LevelConverter;
-import com.example.vietisbaitapbuoi3.entities.converters.RoleConverter;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountRequestDTO;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
-import com.example.vietisbaitapbuoi3.entities.enums.Role;
+import com.example.vietisbaitapbuoi3.DAO.entities.converters.LevelConverter;
+import com.example.vietisbaitapbuoi3.DAO.entities.converters.RoleConverter;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Role;
 import com.example.vietisbaitapbuoi3.utils.UserUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;

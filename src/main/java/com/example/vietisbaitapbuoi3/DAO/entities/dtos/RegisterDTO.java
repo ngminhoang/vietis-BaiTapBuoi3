@@ -1,8 +1,8 @@
-package com.example.vietisbaitapbuoi3.authentication;
+package com.example.vietisbaitapbuoi3.DAO.entities.dtos;
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
-import com.example.vietisbaitapbuoi3.entities.enums.Role;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Register {
+public class RegisterDTO {
     private String mail;
     private String password;
     private String name;
@@ -27,7 +27,7 @@ public class Register {
     private String note;
     private Role role;
 
-    public Register(Account account) {
+    public RegisterDTO(Account account) {
         this.mail = account.getMail();
         this.password = account.getPassword();
         this.name = account.getName();
@@ -40,4 +40,5 @@ public class Register {
         this.role = account.getRole();
         this.birthday = account.getBirthday();
     }
+
 }

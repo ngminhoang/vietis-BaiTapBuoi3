@@ -1,12 +1,12 @@
 package com.example.vietisbaitapbuoi3.services;
 
-import com.example.vietisbaitapbuoi3.authentication.AuthenticationRequest;
-import com.example.vietisbaitapbuoi3.authentication.AuthenticationResponse;
-import com.example.vietisbaitapbuoi3.authentication.Register;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AuthenticationRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AuthenticationResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.RegisterDTO;
 import com.example.vietisbaitapbuoi3.configuration.JwtService;
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.enums.Role;
-import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Role;
+import com.example.vietisbaitapbuoi3.DAO.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,24 +27,24 @@ public class AuthServiceImpl implements AuthService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public AuthenticationResponse login(AuthenticationRequest request) {
+    public AuthenticationResponseDTO login(AuthenticationRequestDTO request) {
         try {
             Optional<Account> optionalUser = accountRepository.findByMail(request.getMail());
             if (optionalUser.isPresent()) {
                 Account user = optionalUser.get();
                 if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                     String jwt = jwtService.generateToken(user);
-                    return AuthenticationResponse.builder().token(jwt).build();
+                    return AuthenticationResponseDTO.builder().token(jwt).build();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return AuthenticationResponse.builder().token(null).build();
+        return AuthenticationResponseDTO.builder().token(null).build();
     }
 
     @Override
-    public AuthenticationResponse register(Register request) {
+    public AuthenticationResponseDTO register(RegisterDTO request) {
         try {
             if (accountRepository.findByMail(request.getMail()).isPresent()) {
                 return null;
@@ -67,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
 
             String jwt = jwtService.generateToken(savedAccount);
 
-            return AuthenticationResponse.builder().token(jwt).build();
+            return AuthenticationResponseDTO.builder().token(jwt).build();
         } catch (Exception e) {
             e.printStackTrace();
         }

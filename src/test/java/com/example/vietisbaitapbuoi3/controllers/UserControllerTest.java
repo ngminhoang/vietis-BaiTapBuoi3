@@ -1,12 +1,12 @@
 package com.example.vietisbaitapbuoi3.controllers;
 
 
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountRequestDTO;
-import com.example.vietisbaitapbuoi3.entities.dto.ChangePasswordDTO;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
-import com.example.vietisbaitapbuoi3.entities.enums.Role;
-import com.example.vietisbaitapbuoi3.services.AccountService;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.ChangePasswordDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Role;
 import com.example.vietisbaitapbuoi3.services.AccountServiceImpl;
 import com.example.vietisbaitapbuoi3.utils.FileUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,9 +21,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.stream.events.EntityReference;
-import java.io.IOException;
-import java.lang.reflect.Array;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
@@ -67,7 +64,7 @@ public class UserControllerTest {
 
     @Test
     void testGetAllAccounts() throws Exception {
-        List<Account> accounts = Arrays.asList(account);
+        List<AccountResponseDTO> accounts = Arrays.asList(new AccountResponseDTO(account));
         when(accountService.getAllAccounts()).thenReturn(ResponseEntity.ok(accounts));
 
         mockMvc.perform(get("/api/admin/accounts"))
@@ -92,7 +89,7 @@ public class UserControllerTest {
     void testChangePassword() throws Exception {
         ChangePasswordDTO changePasswordDTO = new ChangePasswordDTO();
         Account user = account;
-        when(accountService.changePassword(any(Account.class), any(ChangePasswordDTO.class))).thenReturn(ResponseEntity.ok(user));
+        when(accountService.changePassword(any(Account.class), any(ChangePasswordDTO.class))).thenReturn(ResponseEntity.ok(new AccountResponseDTO(account)));
 
         mockMvc.perform(post("/api/employee/test")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +101,7 @@ public class UserControllerTest {
     @Test
     void testGetAccountsByDepartmentCode() throws Exception {
         account.setRole(Role.ROLE_EMPLOYEE);
-        List<Account> accounts = List.of(account);
+        List<AccountResponseDTO> accounts = List.of(new AccountResponseDTO(account));
         when(accountService.getAllAccountsByDepartment(anyString())).thenReturn(ResponseEntity.ok(accounts));
 
         mockMvc.perform(get("/api/admin/accounts/by-department")
@@ -115,7 +112,7 @@ public class UserControllerTest {
 
     @Test
     void testGetAccountById() throws Exception {
-        when(accountService.getAccountsById(1L)).thenReturn(ResponseEntity.ok(account));
+        when(accountService.getAccountsById(1L)).thenReturn(ResponseEntity.ok(new AccountResponseDTO(account)));
 
         mockMvc.perform(get("/api/admin/accounts/{id}", 1L))
                 .andExpect(status().isOk())
@@ -125,7 +122,7 @@ public class UserControllerTest {
 
     @Test
     void testDeleteAccount() throws Exception {
-        when(accountService.delete(1L)).thenReturn(ResponseEntity.ok(account));
+        when(accountService.delete(1L)).thenReturn(ResponseEntity.ok(new AccountResponseDTO(account)));
 
         mockMvc.perform(delete("/api/admin/accounts/{id}", 1L))
                 .andExpect(status().isOk())
@@ -138,21 +135,20 @@ public class UserControllerTest {
         AccountRequestDTO accountRequestDTO = new AccountRequestDTO(account);
 
         Account updatedAccount = account;
-        when(accountService.update(any(Account.class))).thenReturn(ResponseEntity.ok(updatedAccount));
+        when(accountService.update(any(Account.class))).thenReturn(ResponseEntity.ok(new AccountResponseDTO(account)));
 
         mockMvc.perform(put("/api/admin/accounts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(accountRequestDTO)))
                 .andExpect(status().isOk())
-                .andExpect(content().json(objectMapper.writeValueAsString(updatedAccount)));
+                .andExpect(content().json(objectMapper.writeValueAsString(new AccountResponseDTO(account))));
     }
 
     @Test
     void testCreateAccount() throws Exception {
         AccountRequestDTO accountRequestDTO = new AccountRequestDTO(account);
         accountRequestDTO.setId(null);
-        Account createdAccount = account;
-        when(accountService.createAccount(any(Account.class))).thenReturn(ResponseEntity.ok(createdAccount));
+        when(accountService.createAccount(any(Account.class))).thenReturn(ResponseEntity.ok(new AccountResponseDTO(account)));
 
 
         mockMvc.perform(post("/api/admin/accounts")

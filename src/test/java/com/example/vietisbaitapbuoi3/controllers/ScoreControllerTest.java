@@ -1,9 +1,10 @@
 package com.example.vietisbaitapbuoi3.controllers;
 
-import com.example.vietisbaitapbuoi3.entities.Score;
-import com.example.vietisbaitapbuoi3.entities.dto.AccountScoreCountDTO;
-import com.example.vietisbaitapbuoi3.entities.dto.DepartmentScoreCountDTO;
-import com.example.vietisbaitapbuoi3.entities.dto.ScoreRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.Score;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AccountScoreCountDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.DepartmentScoreCountDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.ScoreRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.ScoreResponseDTO;
 import com.example.vietisbaitapbuoi3.services.ScoreService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,11 +34,11 @@ public class ScoreControllerTest {
     @MockBean
     private ScoreService scoreService;
 
-    private List<Score> scores;
+    private List<ScoreResponseDTO> scores;
 
     @BeforeEach
     public void setUp() throws Exception {
-        scores = Arrays.asList(new Score(), new Score());
+        scores = Arrays.asList(new ScoreResponseDTO(new Score()));
     }
 
     @Test
@@ -75,7 +76,7 @@ public class ScoreControllerTest {
         ScoreRequestDTO scoreRequest = new ScoreRequestDTO();
         Score score = new Score(scoreRequest);
 
-        when(scoreService.createScore(any(Score.class))).thenReturn(ResponseEntity.ok(score));
+        when(scoreService.createScore(any(Score.class))).thenReturn(ResponseEntity.ok(new ScoreResponseDTO(score)));
 
         mvc.perform(post("/api/user/scores")
                         .contentType(MediaType.APPLICATION_JSON)

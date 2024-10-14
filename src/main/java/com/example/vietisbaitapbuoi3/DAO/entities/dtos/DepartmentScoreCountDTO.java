@@ -1,4 +1,4 @@
-package com.example.vietisbaitapbuoi3.entities.dto;
+package com.example.vietisbaitapbuoi3.DAO.entities.dtos;
 
 import lombok.Data;
 

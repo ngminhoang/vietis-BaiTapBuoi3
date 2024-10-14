@@ -1,6 +1,7 @@
 package com.example.vietisbaitapbuoi3.controllers;
 
-import com.example.vietisbaitapbuoi3.entities.Department;
+import com.example.vietisbaitapbuoi3.DAO.entities.Department;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.DepartmentResponseDTO;
 import com.example.vietisbaitapbuoi3.services.DepartmentService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,7 +49,7 @@ public class DepartmentControllerTest {
 
     @Test
     public void testGetAllDepartments() throws Exception {
-        List<Department> departments = List.of(department);
+        List<DepartmentResponseDTO> departments = List.of(new DepartmentResponseDTO(department));
         when(departmentService.getAllDepartment()).thenReturn(ResponseEntity.ok(departments));
 
         mockMvc.perform(get("/api/admin/departments"))
@@ -59,7 +60,7 @@ public class DepartmentControllerTest {
 
     @Test
     public void testCreate() throws Exception {
-        when(departmentService.createDepartment(any(Department.class))).thenReturn(ResponseEntity.ok(department));
+        when(departmentService.createDepartment(any(Department.class))).thenReturn(ResponseEntity.ok(new DepartmentResponseDTO(department)));
 
         mockMvc.perform(post("/api/admin/departments")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -71,7 +72,7 @@ public class DepartmentControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        when(departmentService.updateDepartment(any(Department.class))).thenReturn(ResponseEntity.ok(department));
+        when(departmentService.updateDepartment(any(Department.class))).thenReturn(ResponseEntity.ok(new DepartmentResponseDTO(department)));
 
         mockMvc.perform(put("/api/admin/departments")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -84,7 +85,7 @@ public class DepartmentControllerTest {
     @Test
     public void testDelete() throws Exception {
         Long id = 1L;
-        when(departmentService.deleteDepartment(id)).thenReturn(ResponseEntity.ok(department));
+        when(departmentService.deleteDepartment(id)).thenReturn(ResponseEntity.ok(new DepartmentResponseDTO(department)));
 
         mockMvc.perform(delete("/api/admin/departments/{id}", id))
                 .andExpect(status().isOk())

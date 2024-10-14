@@ -1,7 +1,4 @@
-package com.example.vietisbaitapbuoi3.entities.dto;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+package com.example.vietisbaitapbuoi3.DAO.entities.dtos;
 
 import lombok.Getter;
 

@@ -1,6 +1,6 @@
 package com.example.vietisbaitapbuoi3.configuration;
 
-import com.example.vietisbaitapbuoi3.repositories.AccountRepository;
+import com.example.vietisbaitapbuoi3.DAO.repositories.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

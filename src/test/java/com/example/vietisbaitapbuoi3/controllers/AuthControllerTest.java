@@ -1,29 +1,22 @@
 package com.example.vietisbaitapbuoi3.controllers;
 
-import com.example.vietisbaitapbuoi3.authentication.AuthenticationRequest;
-import com.example.vietisbaitapbuoi3.authentication.AuthenticationResponse;
-import com.example.vietisbaitapbuoi3.authentication.Register;
-import com.example.vietisbaitapbuoi3.controllers.api.AuthController;
-import com.example.vietisbaitapbuoi3.controllers.api.AuthControllerImpl;
-import com.example.vietisbaitapbuoi3.entities.Account;
-import com.example.vietisbaitapbuoi3.entities.enums.Level;
-import com.example.vietisbaitapbuoi3.entities.enums.Role;
-import com.example.vietisbaitapbuoi3.services.AuthService;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AuthenticationRequestDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.AuthenticationResponseDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.dtos.RegisterDTO;
+import com.example.vietisbaitapbuoi3.DAO.entities.Account;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Level;
+import com.example.vietisbaitapbuoi3.DAO.entities.enums.Role;
 import com.example.vietisbaitapbuoi3.services.AuthServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
@@ -46,46 +39,46 @@ public class AuthControllerTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private AuthenticationRequest authenticationRequest;
-    private AuthenticationResponse authenticationResponse;
-    private Register registerRequest;
+    private AuthenticationRequestDTO authenticationRequestDTO;
+    private AuthenticationResponseDTO authenticationResponse;
+    private RegisterDTO registerDTORequest;
     private Account account;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        authenticationRequest = new AuthenticationRequest("user@example.com", "password");
-        authenticationResponse = new AuthenticationResponse("token");
-        registerRequest = Register.builder().mail("test@example.com").password("password123").name("Test User").gender(true).imgPath("/images/test.jpg").birthday(LocalDate.of(1990, 1, 1)).salary(50000).level(Level.LEVEL_1).phoneNumber("123-456-7890").note("This is a test user").role(Role.ROLE_EMPLOYEE).build();
+        authenticationRequestDTO = new AuthenticationRequestDTO("user@example.com", "password");
+        authenticationResponse = new AuthenticationResponseDTO("token");
+        registerDTORequest = RegisterDTO.builder().mail("test@example.com").password("password123").name("Test User").gender(true).imgPath("/images/test.jpg").birthday(LocalDate.of(1990, 1, 1)).salary(50000).level(Level.LEVEL_1).phoneNumber("123-456-7890").note("This is a test user").role(Role.ROLE_EMPLOYEE).build();
         account = Account.builder().birthday(LocalDate.of(12, 12, 12)).id(1L).role(Role.ROLE_EMPLOYEE).name("Hoàng Minh Nguyễn").password("123456").level(Level.LEVEL_1).gender(true).mail("hoang8ctt@gmail.com").build();
     }
 
     @Test
     public void testLogin_Success() throws Exception {
-        when(authService.login(any(AuthenticationRequest.class))).thenReturn(authenticationResponse);
+        when(authService.login(any(AuthenticationRequestDTO.class))).thenReturn(authenticationResponse);
 
-        mockMvc.perform(post("/api/public/login").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(authenticationRequest))).andExpect(status().isOk()).andExpect(jsonPath("$.token").value("token"));
+        mockMvc.perform(post("/api/public/login").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(authenticationRequestDTO))).andExpect(status().isOk()).andExpect(jsonPath("$.token").value("token"));
     }
 
     @Test
     public void testLogin_Failure() throws Exception {
-        when(authService.login(any(AuthenticationRequest.class))).thenReturn(null);
+        when(authService.login(any(AuthenticationRequestDTO.class))).thenReturn(null);
 
-        mockMvc.perform(post("/api/public/login").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(authenticationRequest))).andExpect(status().isBadRequest());
+        mockMvc.perform(post("/api/public/login").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(authenticationRequestDTO))).andExpect(status().isBadRequest());
     }
 
     @Test
     public void testRegister_Success() throws Exception {
-        when(authService.register(any(Register.class))).thenReturn(authenticationResponse);
+        when(authService.register(any(RegisterDTO.class))).thenReturn(authenticationResponse);
 
-        mockMvc.perform(post("/api/public/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerRequest))).andExpect(status().isOk()).andExpect(jsonPath("$.token").value("token"));
+        mockMvc.perform(post("/api/public/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerDTORequest))).andExpect(status().isOk()).andExpect(jsonPath("$.token").value("token"));
     }
 
     @Test
     public void testRegister_Failure() throws Exception {
-        when(authService.register(any(Register.class))).thenReturn(null);
+        when(authService.register(any(RegisterDTO.class))).thenReturn(null);
 
-        mockMvc.perform(post("/api/public/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerRequest))).andExpect(status().isBadRequest());
+        mockMvc.perform(post("/api/public/register").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsString(registerDTORequest))).andExpect(status().isBadRequest());
     }
 
     @Test
