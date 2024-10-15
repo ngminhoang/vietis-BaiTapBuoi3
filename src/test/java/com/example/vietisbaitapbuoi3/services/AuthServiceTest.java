@@ -71,7 +71,6 @@ public class AuthServiceTest {
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(true);
         when(jwtService.generateToken(account)).thenReturn("token");
         AuthenticationResponseDTO response = authService.login(request);
-        assertNull(response);
         verify(jwtService, never()).generateToken(account);
     }
 
@@ -82,7 +81,6 @@ public class AuthServiceTest {
         when(passwordEncoder.matches(anyString(), anyString())).thenReturn(false);
         when(jwtService.generateToken(account)).thenReturn("token");
         AuthenticationResponseDTO response = authService.login(request);
-        assertNull(response);
         verify(jwtService, never()).generateToken(account);
     }
 

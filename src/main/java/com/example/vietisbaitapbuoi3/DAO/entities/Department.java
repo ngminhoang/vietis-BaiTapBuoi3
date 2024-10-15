@@ -1,15 +1,15 @@
 package com.example.vietisbaitapbuoi3.DAO.entities;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.data.annotation.Id;
 
 import java.util.List;
 
@@ -18,14 +18,15 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name="department")
+@Table(name = "department")
 public class Department {
 
-    @jakarta.persistence.Id
-    @Id
+    @Id // Dùng Jakarta Persistence cho khóa chính
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     private String name;
 
     @Column(unique = true)
@@ -36,4 +37,3 @@ public class Department {
     @JsonIgnore
     private List<Account> accounts;
 }
-

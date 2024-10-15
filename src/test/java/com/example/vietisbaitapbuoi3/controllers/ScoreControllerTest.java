@@ -21,7 +21,9 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @SpringBootTest
@@ -38,7 +40,7 @@ public class ScoreControllerTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        scores = Arrays.asList(new ScoreResponseDTO(new Score()));
+        scores = Arrays.asList(new ScoreResponseDTO(Score.builder().id(12L).date(LocalDate.of(2012, 12, 12)).type(true).build()));
     }
 
     @Test
@@ -49,7 +51,7 @@ public class ScoreControllerTest {
 
         when(scoreService.getAllScoreByAccountId(accountId, month, year)).thenReturn(ResponseEntity.ok(scores));
 
-        mvc.perform(get("/api/user/scores")
+        mvc.perform(get("/api/user/score/list")  // Updated path
                         .param("id", String.valueOf(accountId))
                         .param("month", String.valueOf(month))
                         .param("year", String.valueOf(year)))
@@ -64,7 +66,7 @@ public class ScoreControllerTest {
 
         when(scoreService.getAllScoreByDepartmentId(departmentId, month, year)).thenReturn(ResponseEntity.ok(scores));
 
-        mvc.perform(get("/api/user/scores/list_by_department")
+        mvc.perform(get("/api/user/score/list_by_department")
                         .param("id", String.valueOf(departmentId))
                         .param("month", String.valueOf(month))
                         .param("year", String.valueOf(year)))
@@ -78,7 +80,7 @@ public class ScoreControllerTest {
 
         when(scoreService.createScore(any(Score.class))).thenReturn(ResponseEntity.ok(new ScoreResponseDTO(score)));
 
-        mvc.perform(post("/api/user/scores")
+        mvc.perform(post("/api/user/score")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{ \"someField\": \"someValue\" }"))
                 .andExpect(status().isOk());
@@ -90,7 +92,7 @@ public class ScoreControllerTest {
 
         when(scoreService.getAnalyzeDepartmentScore()).thenReturn(ResponseEntity.ok(departmentScoreCounts));
 
-        mvc.perform(get("/api/user/scores/analyze/department"))
+        mvc.perform(get("/api/user/score/analyze/department"))
                 .andExpect(status().isOk());
     }
 
@@ -100,7 +102,7 @@ public class ScoreControllerTest {
 
         when(scoreService.getAnalyzeEmployeeScore()).thenReturn(ResponseEntity.ok(accountScoreCounts));
 
-        mvc.perform(get("/api/user/scores/analyze/employee"))
+        mvc.perform(get("/api/user/score/analyze/employee"))
                 .andExpect(status().isOk());
     }
 }

@@ -172,16 +172,16 @@ public class AccountServiceTest {
 
     @Test
     public void testGetAllAccountsByName() {
-        when(accountRepository.findAccountByName(anyString())).thenReturn(List.of());
-        ResponseEntity<List<AccountResponseDTO>> response = accountService.getAllAccounts();
+        when(accountRepository.findAccountByName(anyString())).thenReturn(List.of(account));
+        ResponseEntity<List<AccountResponseDTO>> response = accountService.getAllAccountsByName(anyString());
         assertNotNull(response);
         verify(accountRepository, times(1)).findAccountByName(anyString());
     }
 
     @Test
     public void testGetAllAccountsByDepartment() {
-        when(accountRepository.findAccountByDepartmentCode(anyString())).thenReturn(List.of());
-        ResponseEntity<List<AccountResponseDTO>> response = accountService.getAllAccounts();
+        when(accountRepository.findAccountByDepartmentCode(anyString())).thenReturn(List.of(account));
+        ResponseEntity<List<AccountResponseDTO>> response = accountService.getAllAccountsByDepartment(anyString());
         assertNotNull(response);
         verify(accountRepository, times(1)).findAccountByDepartmentCode(anyString());
     }

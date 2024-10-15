@@ -66,7 +66,6 @@ public class PublicControllerTest {
 
         mockMvc.perform(get("/api/public/get_all"))
                 .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(accounts)));
     }
 
@@ -77,7 +76,6 @@ public class PublicControllerTest {
 
         mockMvc.perform(get("/api/public/department/get_all"))
                 .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(departments)));
     }
 
@@ -88,7 +86,6 @@ public class PublicControllerTest {
 
         mockMvc.perform(get("/api/public/level/get_all"))
                 .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(levels)));
     }
 
@@ -98,7 +95,6 @@ public class PublicControllerTest {
 
         mockMvc.perform(get("/api/public/account/get_top"))
                 .andExpect(status().isOk())
-//                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json(objectMapper.writeValueAsString(List.of())));
     }
 }

@@ -1,9 +1,11 @@
 package com.example.vietisbaitapbuoi3.DAO.entities.dtos;
 
 import com.example.vietisbaitapbuoi3.DAO.entities.Score;
+import lombok.Data;
 
 import java.time.LocalDate;
 
+@Data
 public class ScoreResponseDTO {
     private Long id;
 

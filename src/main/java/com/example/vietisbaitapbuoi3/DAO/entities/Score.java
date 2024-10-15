@@ -3,10 +3,12 @@ package com.example.vietisbaitapbuoi3.DAO.entities;
 import com.example.vietisbaitapbuoi3.DAO.entities.dtos.ScoreRequestDTO;
 import com.example.vietisbaitapbuoi3.utils.UserUtil;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.antlr.v4.runtime.misc.NotNull;
 
 import java.time.LocalDate;
 
@@ -22,8 +24,10 @@ public class Score {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotNull
     private LocalDate date;
 
+    @NotNull
     private Boolean type;
 
     private String reason;

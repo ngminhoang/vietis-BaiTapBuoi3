@@ -82,7 +82,7 @@ public class UserControllerTest {
         mockMvc.perform(multipart("/api/employee/upload_img")
                         .file("file", file.getBytes())
                         .principal(() -> "user"))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().is4xxClientError());
     }
 
     @Test

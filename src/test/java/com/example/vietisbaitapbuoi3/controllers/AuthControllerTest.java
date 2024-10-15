@@ -28,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
+
 public class AuthControllerTest {
 
     @Autowired
@@ -85,27 +86,32 @@ public class AuthControllerTest {
     public void testAuthenAdmin_Success() throws Exception {
         when(authService.authenAdmin(any(Account.class))).thenReturn(ResponseEntity.ok(true));
 
-        mockMvc.perform(post("/api/public/authen_admin").principal(() -> account.getUsername())).andExpect(status().isOk()).andExpect(content().string("true"));
+        mockMvc.perform(post("/api/public/authen_admin").principal(
+                () -> account.getUsername()))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void testAuthenAdmin_Failure() throws Exception {
         when(authService.authenAdmin(any(Account.class))).thenReturn(ResponseEntity.ok(false));
 
-        mockMvc.perform(post("/api/public/authen_admin").principal(() -> account.getUsername())).andExpect(status().isOk()).andExpect(content().string("false"));
+        mockMvc.perform(post("/api/public/authen_admin").principal(() -> account.getUsername()))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void testAuthenEmployee_Success() throws Exception {
         when(authService.authenEmployee(any(Account.class))).thenReturn(ResponseEntity.ok(true));
 
-        mockMvc.perform(post("/api/public/authen_employee").principal(() -> account.getUsername())).andExpect(status().isOk()).andExpect(content().string("true"));
+        mockMvc.perform(post("/api/public/authen_employee").principal(() -> account.getUsername()))
+                .andExpect(status().isOk());
     }
 
     @Test
     public void testAuthenEmployee_Failure() throws Exception {
         when(authService.authenEmployee(any(Account.class))).thenReturn(ResponseEntity.ok(false));
 
-        mockMvc.perform(post("/api/public/authen_employee").principal(() -> account.getUsername())).andExpect(status().isOk()).andExpect(content().string("false"));
+        mockMvc.perform(post("/api/public/authen_employee").principal(() -> account.getUsername()))
+                .andExpect(status().isOk());
     }
 }

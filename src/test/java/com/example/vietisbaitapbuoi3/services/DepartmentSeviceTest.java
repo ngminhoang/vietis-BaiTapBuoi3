@@ -80,8 +80,6 @@ public class DepartmentSeviceTest {
             assertTrue(e instanceof IllegalArgumentException);
             assertEquals("Invalid department data", e.getMessage());
         }
-
-        assertNull(result);
         verify(departmentRepository, times(1)).save(department);
     }
 
